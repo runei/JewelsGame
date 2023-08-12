@@ -1,8 +1,8 @@
-#include <SDL.h>
-#include "src/common/Constants.hpp"
-#include "src/view/SDLRenderer.hpp"
-#include "src/view/GameView.hpp"
-#include "src/viewmodel/GameViewModel.hpp"
+#include "SDL2/SDL.h"
+#include "common/Constants.hpp"
+#include "view/SDLRenderer.hpp"
+#include "view/GameView.hpp"
+#include "viewmodel/GameViewModel.hpp"
 
 int main(int argc, char* argv[]) {
 	
@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
 	} 
 
 	// Create SDL window and game components
-    SDL_Window* window = SDL_CreateWindow("Jewel Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    SDL_Window* window = SDL_CreateWindow("Jewel Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT, 0);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 	SDLRenderer sdlRenderer(renderer);

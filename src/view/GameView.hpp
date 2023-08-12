@@ -1,8 +1,8 @@
 #ifndef GAME_VIEW_HPP
 #define GAME_VIEW_HPP
 
-#include "SDLRenderer.h"
-#include "../viewmodel/GameViewModel.h"
+#include "SDLRenderer.hpp"
+#include "../viewmodel/GameViewModel.hpp"
 
 class GameView {
 public:

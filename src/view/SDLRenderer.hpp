@@ -1,7 +1,7 @@
 #ifndef SDL_RENDERER_HPP
 #define SDL_RENDERER_HPP
 
-#include <SDL.h>
+#include "SDL2/SDL.h"
 
 class SDLRenderer {
 public:

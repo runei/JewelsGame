@@ -4,10 +4,6 @@ GameViewModel::GameViewModel() : m_score(0) {
     // Initialize game state and gems
 }
 
-GameViewModel::~GameViewModel() {
-    // Clean up resources, if needed
-}
-
 void GameViewModel::Update() {
     // Update game logic, handle interactions, etc.
     // Notify observers about changes, if applicable
