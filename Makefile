@@ -1,14 +1,15 @@
 CXX = g++
 CXXFLAGS = -std=c++17
-LIBS = -lSDL2 -lSDL2_image
+LIBS = -lSDL2 -lSDL2_image -lpthread -ldl
 
 SRC_DIR = src
 COMMON_DIR = $(SRC_DIR)/common
 MODEL_DIR = $(SRC_DIR)/model
 VIEW_DIR = $(SRC_DIR)/view
 VIEWMODEL_DIR = $(SRC_DIR)/viewmodel
+EXTERNAL_DIR = $(SRC_DIR)/external
 
-SRCS = $(wildcard $(SRC_DIR)/*.cpp $(COMMON_DIR)/*.cpp $(MODEL_DIR)/*.cpp $(VIEW_DIR)/*.cpp  $(VIEWMODEL_DIR)/*.cpp)
+SRCS = $(wildcard $(SRC_DIR)/*.cpp $(COMMON_DIR)/*.cpp $(MODEL_DIR)/*.cpp $(VIEW_DIR)/*.cpp  $(VIEWMODEL_DIR)/*.cpp $(EXTERNAL_DIR)/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 
 EXECUTABLE = jewelsgame
