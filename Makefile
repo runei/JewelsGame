@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -std=c++17
-LIBS = -lSDL2
+LIBS = -lSDL2 -lSDL2_image
 
 SRC_DIR = src
 COMMON_DIR = $(SRC_DIR)/common
