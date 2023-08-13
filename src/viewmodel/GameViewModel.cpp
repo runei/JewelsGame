@@ -4,16 +4,16 @@ GameViewModel::GameViewModel() : m_score(0) {
     // Initialize game state and gems
 }
 
-void GameViewModel::Update() {
+void GameViewModel::update() {
     // Update game logic, handle interactions, etc.
     // Notify observers about changes, if applicable
     // NotifyObservers();
 }
 
-// const std::vector<Gem>& GameViewModel::GetGems() const {
-//     return m_gems;
-// }
+const std::vector<Jewel>& GameViewModel::getJewels() const {
+    return m_jewels;
+}
 
-int GameViewModel::GetScore() const {
+int GameViewModel::getScore() const {
     return m_score;
 }

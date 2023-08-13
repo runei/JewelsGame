@@ -3,6 +3,8 @@
 
 class Constants {
 public:
+	static constexpr const char* GAME_NAME = "Jewel Game";
+
     // Screen dimensions
     static constexpr int SCREEN_WIDTH = 800;
     static constexpr int SCREEN_HEIGHT = 600;

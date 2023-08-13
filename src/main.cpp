@@ -1,43 +1,25 @@
-#include "SDL2/SDL.h"
 #include "common/Constants.hpp"
-#include "view/SDLRenderer.hpp"
-#include "view/GameView.hpp"
-#include "viewmodel/GameViewModel.hpp"
+#include "view/Game.hpp"
 
 int main(int argc, char* argv[]) {
-	
-	// Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-		return 1;
-	} 
 
-	// Create SDL window and game components
-    SDL_Window* window = SDL_CreateWindow("Jewel Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT, 0);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    Game game;
 
-	SDLRenderer sdlRenderer(renderer);
-	GameViewModel gameViewModel;
+    if (game.initialize(Constants::GAME_NAME, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT)) {
 
-	sdlRenderer.Initialize();
+        while (game.isRunning()) {
 
-	GameView gameView(sdlRenderer);
+            game.handleEvents();
 
-	// main loop
-	while (true) {
-		// handle events #TODO
+            game.update();
 
-		gameViewModel.Update();
+            game.render();
 
-		sdlRenderer.Clear();
+            // Add frame limiting or delay if needed
+        }
 
-		gameView.Render(gameViewModel);
-	}
-
-	// Clean and quit SDL
-    sdlRenderer.Cleanup();
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+        game.cleanup();
+    }
 
     return 0;
 }

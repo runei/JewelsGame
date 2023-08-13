@@ -1,23 +1,23 @@
 #ifndef GAME_VIEW_MODEL_HPP
 #define GAME_VIEW_MODEL_HPP
 
-// #include "Jewel.h"  
+#include "../model/Jewel.hpp"
 // #include "Observer.h"
 // #include "Subject.h"
 #include <vector>
 
 //This class will manage the game state and provide an interface for the view to access and update that state.
-class GameViewModel //: public Subject 
+class GameViewModel //: public Subject
 {
 public:
     GameViewModel();
 
-    void Update();
-    // const std::vector<Jewel>& GetJewels() const;
-    int GetScore() const;
+    void update();
+    const std::vector<Jewel>& getJewels() const;
+    int getScore() const;
 
 private:
-    // std::vector<Jewel> m_jewels;
+    std::vector<Jewel> m_jewels;
     int m_score;
 
 };
