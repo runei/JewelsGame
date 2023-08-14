@@ -17,7 +17,7 @@ AssetManager::~AssetManager() {
     }
 }
 
-SDL_Texture* AssetManager::getTextureForColour(const Colour& colour) {
+SDL_Texture* AssetManager::getTextureForColour(const Colour::Type& colour) {
     auto textureIt = m_textureMap.find(colour);
     if (textureIt != m_textureMap.end()) {
         return textureIt->second;
@@ -42,8 +42,10 @@ bool AssetManager::loadColoursFromConfig() {
 
 		//Fill texture map
 		for (const auto& colourEntry : root["Colours"]) {
-			Colour colour = Colour::Black;// ColourFromString(colourEntry["name"].get<std::string>());
-			m_textureMap[colour] = loadTexture(colourEntry["imagePath"].get<std::string>());
+			Colour::Type colourType = Colour::GetColorTypeByName(colourEntry["name"].get<std::string>());
+			if (colourType != Colour::Type::Unknown) {
+				m_textureMap[colourType] = loadTexture(colourEntry["imagePath"].get<std::string>());
+			}
 
 		}
 
