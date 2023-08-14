@@ -5,6 +5,9 @@ class Constants {
 public:
 	static constexpr const char* GAME_NAME = "Jewel Game";
 
+    // Configuration
+    static constexpr const char* COLOUR_CONFIG_PATH = "../config/ColourConfig.json";
+
     // Screen dimensions
     static constexpr int SCREEN_WIDTH = 800;
     static constexpr int SCREEN_HEIGHT = 600;

@@ -2,12 +2,6 @@
 #include "../external/loguru.hpp"
 
 
-/*TODO
-
-Remember to add logs
-use constructor and destructor to initialize and clean?
-*/
-
 Game::Game() :  m_backgroundTexture(nullptr), m_isRunning(false) {}
 
 Game::~Game() {}
