@@ -2,24 +2,36 @@
 #define GAME_VIEW_MODEL_HPP
 
 #include "../model/Jewel.hpp"
-// #include "Observer.h"
-// #include "Subject.h"
+#include "../common/ColourManager.hpp"
 #include <vector>
+#include <string>
 
 //This class will manage the game state and provide an interface for the view to access and update that state.
-class GameViewModel //: public Subject
-{
+class GameViewModel {
 public:
-    GameViewModel();
+    GameViewModel(int numRows, int numCols);
 
-    void update();
-    const std::vector<Jewel>& getJewels() const;
-    int getScore() const;
+    // getters
+    int getNumRows() const;
+    int getNumCols() const;
+    std::string getColourImgPath(int row, int col) const;
+
+    // game functions
+    void swapJewels(int row1, int col1, int row2, int col2);
+    bool checkForMatches();
+    void updateGrid();
 
 private:
-    std::vector<Jewel> m_jewels;
-    int m_score;
+    int m_numRows;
+    int m_numCols;
+    std::vector<std::vector<Jewel>> m_grid;
 
+    ColourManager m_colourManager;
+
+    Colour getJewelColour(int row, int col) const;
+    void setJewelColour(int row, int col, Colour colour);
+
+    void fillGridRandomly();
 };
 
-#endif // GAME_VIEW_MODEL_HPP
+#endif // GAMEVIEWMODEL_HPP

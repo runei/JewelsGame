@@ -1,9 +1,9 @@
 {
     "Colours": {
-        "Black": "assets/Black.png",
-        "White": "assets/White.png",
-        "Pink": "assets/Pink.png",
-        "Blue": "assets/Blue.png",
-        "Orange": "assets/Orange.png"
+        "Black": "assets/images/Black.png",
+        "White": "assets/images/White.png",
+        "Pink": "assets/images/Pink.png",
+        "Blue": "assets/images/Blue.png",
+        "Orange": "assets/images/Orange.png"
     }
 }

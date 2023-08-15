@@ -4,6 +4,9 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "../viewmodel/GameViewModel.hpp"
+#include "../common/Constants.hpp"
+#include "Grid.hpp"
+
 
 class Game {
 public:
@@ -35,6 +38,7 @@ private:
     SDL_Texture* m_backgroundTexture;
 
     GameViewModel m_gameViewModel;
+    Grid m_grid;
 
     bool m_isRunning;
 

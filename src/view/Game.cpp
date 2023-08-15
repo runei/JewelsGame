@@ -2,7 +2,7 @@
 #include "../external/loguru.hpp"
 
 
-Game::Game() :  m_backgroundTexture(nullptr), m_isRunning(false) {}
+Game::Game() :  m_backgroundTexture(nullptr), m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_grid(m_gameViewModel) {}
 
 Game::~Game() {}
 
@@ -107,6 +107,7 @@ void Game::render() {
 	SDL_RenderClear(m_renderer);
 
 	renderBackground();
+    m_grid.render(m_renderer, 100, 100);
 
 	SDL_RenderPresent(m_renderer);
 }

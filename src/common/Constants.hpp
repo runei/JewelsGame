@@ -6,7 +6,7 @@ public:
 	static constexpr const char* GAME_NAME = "Jewel Game";
 
     // Configuration
-    static constexpr const char* COLOUR_CONFIG_PATH = "../config/ColourConfig.json";
+    static constexpr const char* COLOUR_CONFIG_PATH = "config/ColourConfig.json";
 
     // Screen dimensions
     static constexpr int SCREEN_WIDTH = 800;
@@ -15,6 +15,7 @@ public:
     // Grid dimensions
     static constexpr int GRID_ROWS = 8;
     static constexpr int GRID_COLS = 8;
+    static constexpr int JEWEL_SIZE = 64;
 
     // Game-related constants
     static constexpr int INITIAL_SCORE = 0;
