@@ -29,8 +29,7 @@ public:
     bool isRunning();
 
 private:
-    const int FRAME_RATE = 60;
-    const int TIME_PER_FRAME = 1000 / FRAME_RATE;
+
     Uint32 m_prevFrameTime;
 
     SDL_Window* m_window;

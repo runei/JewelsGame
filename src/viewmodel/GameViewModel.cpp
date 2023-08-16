@@ -26,6 +26,15 @@ void GameViewModel::setJewelColour(int row, int col, Colour colour) {
     m_grid[row][col].setColour(colour);
 }
 
+bool GameViewModel::isJewelHighlighted(int row, int col) const {
+    return m_grid[row][col].isHighlighted();
+}
+
+void GameViewModel::toggleJewelHighlight(int row, int col) {
+    Jewel& jewel = m_grid[row][col];
+    jewel.setHighlighted(!jewel.isHighlighted());
+}
+
 void GameViewModel::swapJewels(int row1, int col1, int row2, int col2) {
     std::swap(m_grid[row1][col1], m_grid[row2][col2]);
 }

@@ -83,6 +83,14 @@ void Game::handleEvents() {
 			m_isRunning = false;
 			break;
 
+        case SDL_MOUSEBUTTONDOWN:
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                int mouseX = event.button.x;
+                int mouseY = event.button.y;
+                m_grid.handleMouseClick(mouseX, mouseY);
+            }
+            break;
+
 		default:
 			break;
 	}
@@ -107,7 +115,7 @@ void Game::render() {
 	SDL_RenderClear(m_renderer);
 
 	renderBackground();
-    m_grid.render(m_renderer, 100, 100);
+    m_grid.render(m_renderer, Constants::OFFSET_ROW, Constants::OFFSET_COL);
 
 	SDL_RenderPresent(m_renderer);
 }
@@ -142,8 +150,8 @@ void Game::delayIfNeeded() {
     Uint32 currentTime = SDL_GetTicks();
     Uint32 elapsedTime = currentTime - m_prevFrameTime;
 
-    if (elapsedTime < TIME_PER_FRAME) {
-        Uint32 delayTime = TIME_PER_FRAME - elapsedTime;
+    if (elapsedTime < Constants::TIME_PER_FRAME) {
+        Uint32 delayTime = Constants::TIME_PER_FRAME - elapsedTime;
         // LOG_F(INFO, "Delaying for %u ms to achieve desired frame rate.", delayTime);
         SDL_Delay(delayTime);
     }

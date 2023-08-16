@@ -8,14 +8,23 @@ public:
     // Configuration
     static constexpr const char* COLOUR_CONFIG_PATH = "config/ColourConfig.json";
 
-    // Screen dimensions
-    static constexpr int SCREEN_WIDTH = 800;
-    static constexpr int SCREEN_HEIGHT = 600;
+    // Frames
+    static constexpr int FRAME_RATE = 60;
+    static constexpr int TIME_PER_FRAME = 1000 / FRAME_RATE;
+
 
     // Grid dimensions
     static constexpr int GRID_ROWS = 8;
     static constexpr int GRID_COLS = 8;
     static constexpr int JEWEL_SIZE = 64;
+
+    // Screen dimensions
+    static constexpr int SCREEN_WIDTH = JEWEL_SIZE * (GRID_ROWS + 2); //800
+    static constexpr int SCREEN_HEIGHT = 600;
+
+    // Offsets for grid in the screen
+    static constexpr int OFFSET_ROW = 0;
+    static constexpr int OFFSET_COL = 0;
 
     // Game-related constants
     static constexpr int INITIAL_SCORE = 0;

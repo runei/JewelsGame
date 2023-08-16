@@ -15,6 +15,9 @@ public:
     int getNumRows() const;
     int getNumCols() const;
     std::string getColourImgPath(int row, int col) const;
+    bool isJewelHighlighted(int row, int col) const;
+
+    void toggleJewelHighlight(int row, int col);
 
     // game functions
     void swapJewels(int row1, int col1, int row2, int col2);

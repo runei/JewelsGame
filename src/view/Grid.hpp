@@ -5,7 +5,6 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 
-#include "../model/Jewel.hpp"
 #include "../common/Constants.hpp"
 #include "../viewmodel/GameViewModel.hpp"
 
@@ -15,7 +14,12 @@ public:
 
     void render(SDL_Renderer* renderer, int xOffset, int yOffset);
 
+    void handleMouseClick(int mouseX, int mouseY);
+
 private:
+
+	int m_highlightedRow;
+    int m_highlightedCol;
 
     GameViewModel& m_viewModel;
 

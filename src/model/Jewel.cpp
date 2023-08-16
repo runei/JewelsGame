@@ -11,3 +11,11 @@ Colour Jewel::getColour() const {
 void Jewel::setColour(Colour colour) {
     m_colour = colour;
 }
+
+bool Jewel::isHighlighted() const {
+	return m_highlighted;
+}
+
+void Jewel::setHighlighted(bool highlighted) {
+	m_highlighted = highlighted;
+}
