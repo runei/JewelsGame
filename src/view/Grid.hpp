@@ -1,29 +1,33 @@
+
 #ifndef GRID_HPP
 #define GRID_HPP
 
-#include <vector>
+#include "../viewmodel/GameViewModel.hpp"
+#include "../common/Constants.hpp"
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 
-#include "../common/Constants.hpp"
-#include "../viewmodel/GameViewModel.hpp"
+#include <unordered_map>
 
 class Grid {
 public:
-    Grid(GameViewModel& viewModel);
+    explicit Grid(GameViewModel& viewModel);
+    ~Grid();
 
-    void render(SDL_Renderer* renderer, int xOffset, int yOffset);
-
-    void handleMouseClick(int mouseX, int mouseY);
+    void render(SDL_Renderer* renderer);
+    void handleMouseClick(int x, int y);
+    void clearTextureCache();
 
 private:
-
-	int m_highlightedRow;
-    int m_highlightedCol;
+    SDL_Texture* getOrCreateTexture(SDL_Renderer* renderer, const std::string& imagePath);
+    void createGridTexture(SDL_Renderer* renderer);
 
     GameViewModel& m_viewModel;
-
-    SDL_Texture* renderJewel(SDL_Renderer* renderer, const std::string& imagePath);
+    int m_highlightedRow;
+    int m_highlightedCol;
+    SDL_Texture* m_gridTexture;
+    std::unordered_map<std::string, SDL_Texture*> m_textureCache;
 };
 
 #endif // GRID_HPP
+

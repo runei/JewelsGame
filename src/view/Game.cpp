@@ -4,6 +4,8 @@
 Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_grid(m_gameViewModel) {}
 
 Game::~Game() {
+    m_grid.clearTextureCache();
+
     cleanup();
 }
 
@@ -106,7 +108,7 @@ void Game::render() {
     SDL_RenderClear(m_renderer);
 
     renderBackground();
-    m_grid.render(m_renderer, Constants::OFFSET_ROW, Constants::OFFSET_COL);
+    m_grid.render(m_renderer);
 
     SDL_RenderPresent(m_renderer);
 }
