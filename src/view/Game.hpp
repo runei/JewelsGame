@@ -49,6 +49,8 @@ private:
 
     // Calculate and wait for the remaining time to achieve desired frame rate
     void delayIfNeeded();
+    SDL_Texture* loadTexture(const std::string& imagePath);
+    bool initializeResources();
 };
 
 #endif // GAME_HPP
