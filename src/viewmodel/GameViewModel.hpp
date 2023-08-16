@@ -17,7 +17,7 @@ public:
     std::string getColourImgPath(int row, int col) const;
     bool isJewelHighlighted(int row, int col) const;
 
-    void toggleJewelHighlight(int row, int col);
+    bool toggleJewelHighlight(int row, int col);
 
     // game functions
     void swapJewels(int row1, int col1, int row2, int col2);
@@ -30,6 +30,11 @@ private:
     std::vector<std::vector<Jewel>> m_grid;
 
     ColourManager m_colourManager;
+
+    static constexpr int NOT_HIGHLIGHTED = -1;
+
+    int m_highlightedRow;
+    int m_highlightedCol;
 
     Colour getJewelColour(int row, int col) const;
     void setJewelColour(int row, int col, Colour colour);

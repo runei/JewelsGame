@@ -2,7 +2,7 @@
 #include "../external/loguru.hpp"
 
 Grid::Grid(GameViewModel& viewModel)
-    : m_viewModel(viewModel), m_highlightedRow(-1), m_highlightedCol(-1), m_gridTexture(nullptr) {
+    : m_viewModel(viewModel), m_gridTexture(nullptr) {
 }
 
 Grid::~Grid() {
@@ -91,7 +91,6 @@ void Grid::createGridTexture(SDL_Renderer* renderer) {
 }
 
 void Grid::handleMouseClick(int x, int y) {
-    LOG_F(INFO, "Mouse click at point %d,  %d", x, y);
 
     int col = x / Constants::JEWEL_SIZE;
     int row = y / Constants::JEWEL_SIZE;
@@ -99,17 +98,13 @@ void Grid::handleMouseClick(int x, int y) {
     if (col >= 0 && col < m_viewModel.getNumCols() && row >= 0 && row < m_viewModel.getNumRows()) {
         LOG_F(INFO, "Mouse click at row %d, col %d", row, col);
 
-        m_viewModel.toggleJewelHighlight(row, col);
+        if (m_viewModel.toggleJewelHighlight(row, col)) {
 
-        if (m_viewModel.isJewelHighlighted(row, col)) {
-            LOG_F(INFO, "Jewel at row %d, col %d highlighted", row, col);
-        } else {
-            LOG_F(INFO, "Jewel at row %d, col %d unhighlighted", row, col);
+            m_gridTexture = nullptr;
+
+            LOG_F(INFO, "Grid texture reset.");
+
         }
-
-        m_gridTexture = nullptr;
-
-        LOG_F(INFO, "Grid texture reset.");
     }
 }
 

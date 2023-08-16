@@ -23,8 +23,7 @@ private:
     void createGridTexture(SDL_Renderer* renderer);
 
     GameViewModel& m_viewModel;
-    int m_highlightedRow;
-    int m_highlightedCol;
+
     SDL_Texture* m_gridTexture;
     std::unordered_map<std::string, SDL_Texture*> m_textureCache;
 };
