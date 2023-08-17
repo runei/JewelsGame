@@ -134,10 +134,19 @@ void Grid::handleMouseMotion(int x, int y) {
 
 void Grid::handleMouseRelease(int x, int y) {
     if (m_dragging) {
-        // Perform swapping logic based on the drag destination
-        // ...
 
-        // Clean up drag-related variables
+        int col = x / Constants::JEWEL_SIZE;
+        int row = y / Constants::JEWEL_SIZE;
+
+        if ((row == m_dragStartRow && abs(col - m_dragStartCol) == 1) || (col == m_dragStartCol && abs(row - m_dragStartRow) == 1)) {
+
+            m_viewModel.swapJewels(row, col, m_dragStartRow, m_dragStartCol);
+
+            m_gridTexture = nullptr;
+
+            LOG_F(INFO, "Grid texture release reset.");
+        }
+
         m_dragging = false;
         m_dragStartCol = -1;
         m_dragStartRow = -1;
