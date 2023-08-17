@@ -90,7 +90,18 @@ void GameViewModel::fillGridRandomly() {
     for (int row = 0; row < m_numRows; ++row) {
         for (int col = 0; col < m_numCols; ++col) {
             Colour randomColour = static_cast<Colour>(colourDistribution(gen));
+
+            // Ensure no immediate horizontal or vertical match
+            while (col >= 2 && m_grid[row][col - 1].getColour() == randomColour && m_grid[row][col - 2].getColour() == randomColour) {
+                randomColour = static_cast<Colour>(colourDistribution(gen));
+            }
+
+            while (row >= 2 && m_grid[row - 1][col].getColour() == randomColour && m_grid[row - 2][col].getColour() == randomColour) {
+                randomColour = static_cast<Colour>(colourDistribution(gen));
+            }
+
             m_grid[row][col] = Jewel(randomColour);
         }
     }
 }
+
