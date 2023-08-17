@@ -83,7 +83,19 @@ void Game::handleEvents() {
             if (event.button.button == SDL_BUTTON_LEFT) {
                 int mouseX = event.button.x;
                 int mouseY = event.button.y;
-                m_grid.handleMouseClick(mouseX, mouseY);
+                m_grid.handleMouseClick(mouseX, mouseY, m_renderer);
+            }
+            break;
+
+        case SDL_MOUSEMOTION:
+            m_grid.handleMouseMotion(event.motion.x, event.motion.y);
+            break;
+
+        case SDL_MOUSEBUTTONUP:
+            if (event.button.button == SDL_BUTTON_LEFT) {
+                int mouseX = event.button.x;
+                int mouseY = event.button.y;
+                m_grid.handleMouseRelease(mouseX, mouseY);
             }
             break;
 

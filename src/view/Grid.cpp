@@ -2,7 +2,7 @@
 #include "../external/loguru.hpp"
 
 Grid::Grid(GameViewModel& viewModel)
-    : m_viewModel(viewModel), m_gridTexture(nullptr) {
+    : m_viewModel(viewModel), m_gridTexture(nullptr), m_dragging(false), m_dragJewelTexture(nullptr) {
 }
 
 Grid::~Grid() {
@@ -49,6 +49,16 @@ void Grid::render(SDL_Renderer* renderer) {
 
     // Reset the rendering viewport
     SDL_RenderSetViewport(renderer, nullptr);
+
+    if (m_dragging) {
+        if (m_dragJewelTexture) {
+            int destX = m_dragDestCol - Constants::JEWEL_SIZE / 2;
+            int destY = m_dragDestRow - Constants::JEWEL_SIZE / 2;
+
+            SDL_Rect destRect = {destX, destY, Constants::JEWEL_SIZE, Constants::JEWEL_SIZE};
+            SDL_RenderCopy(renderer, m_dragJewelTexture, nullptr, &destRect);
+        }
+    }
 }
 
 void Grid::createGridTexture(SDL_Renderer* renderer) {
@@ -90,25 +100,55 @@ void Grid::createGridTexture(SDL_Renderer* renderer) {
     SDL_SetRenderTarget(renderer, nullptr);
 }
 
-void Grid::handleMouseClick(int x, int y) {
-
+void Grid::handleMouseClick(int x, int y, SDL_Renderer* renderer) {
     int col = x / Constants::JEWEL_SIZE;
     int row = y / Constants::JEWEL_SIZE;
 
     if (col >= 0 && col < m_viewModel.getNumCols() && row >= 0 && row < m_viewModel.getNumRows()) {
-        LOG_F(INFO, "Mouse click at row %d, col %d", row, col);
-
         if (m_viewModel.toggleJewelHighlight(row, col)) {
+
+            m_dragging = true;
+            m_dragStartCol = col;
+            m_dragStartRow = row;
+            m_dragDestCol = col * Constants::JEWEL_SIZE + Constants::JEWEL_SIZE / 2;
+            m_dragDestRow = row * Constants::JEWEL_SIZE + Constants::JEWEL_SIZE / 2;
+
+            // Load the jewel texture for dragging
+            std::string imagePath = m_viewModel.getColourImgPath(m_dragStartRow, m_dragStartCol);
+            m_dragJewelTexture = getOrCreateTexture(renderer, imagePath);
 
             m_gridTexture = nullptr;
 
             LOG_F(INFO, "Grid texture reset.");
-
         }
     }
 }
 
+void Grid::handleMouseMotion(int x, int y) {
+    if (m_dragging) {
+        // Update destination position during drag movement
+        m_dragDestCol = x;
+        m_dragDestRow = y;
+    }
+}
 
+void Grid::handleMouseRelease(int x, int y) {
+    if (m_dragging) {
+        // Perform swapping logic based on the drag destination
+        // ...
+
+        // Clean up drag-related variables
+        m_dragging = false;
+        m_dragStartCol = -1;
+        m_dragStartRow = -1;
+        m_dragDestCol = -1;
+        m_dragDestRow = -1;
+
+        if (m_dragJewelTexture) {
+            m_dragJewelTexture = nullptr;
+        }
+    }
+}
 
 void Grid::clearTextureCache() {
     for (const auto& pair : m_textureCache) {

@@ -15,7 +15,9 @@ public:
     ~Grid();
 
     void render(SDL_Renderer* renderer);
-    void handleMouseClick(int x, int y);
+    void handleMouseClick(int x, int y, SDL_Renderer* renderer);
+    void handleMouseMotion(int x, int y);
+    void handleMouseRelease(int x, int y);
     void clearTextureCache();
 
 private:
@@ -26,6 +28,14 @@ private:
 
     SDL_Texture* m_gridTexture;
     std::unordered_map<std::string, SDL_Texture*> m_textureCache;
+
+    bool m_dragging;
+    int m_dragStartRow;
+    int m_dragStartCol;
+    int m_dragDestRow;
+    int m_dragDestCol;
+
+    SDL_Texture* m_dragJewelTexture;
 };
 
 #endif // GRID_HPP
