@@ -110,37 +110,58 @@ void GameViewModel::fillGridRandomly() {
 }
 
 bool GameViewModel::removeMatches() {
-    bool anyMatches = false;
 
-    // Check horizontally
-    for (int row = 0; row < m_numRows; ++row) {
-        for (int col = 0; col < m_numCols - 2; ++col) {
-            Colour color = m_grid[row][col].getColour();
-            if (color != Colour::Unknown &&
-                m_grid[row][col + 1].getColour() == color &&
-                m_grid[row][col + 2].getColour() == color) {
-                m_grid[row][col].setColour(Colour::Unknown);
-                m_grid[row][col + 1].setColour(Colour::Unknown);
-                m_grid[row][col + 2].setColour(Colour::Unknown);
-                anyMatches = true;
-            }
-        }
-    }
+    // List to keep track of jewels to be removed
+    std::vector<Jewel *> jewelsToRemove;
 
     // Check vertically
     for (int col = 0; col < m_numCols; ++col) {
-        for (int row = 0; row < m_numRows - 2; ++row) {
+        int row = 0;
+        while (row < m_numRows - 2) {
             Colour color = m_grid[row][col].getColour();
-            if (color != Colour::Unknown &&
-                m_grid[row + 1][col].getColour() == color &&
-                m_grid[row + 2][col].getColour() == color) {
-                m_grid[row][col].setColour(Colour::Unknown);
-                m_grid[row + 1][col].setColour(Colour::Unknown);
-                m_grid[row + 2][col].setColour(Colour::Unknown);
-                anyMatches = true;
+            if (color != Colour::Unknown) {
+                int matchCount = 1;
+                for (int i = 1; row + i < m_numRows && m_grid[row + i][col].getColour() == color; ++i) {
+                    ++matchCount;
+                }
+                if (matchCount >= 3) {
+                    for (int i = 0; i < matchCount; ++i) {
+                        jewelsToRemove.push_back(&m_grid[row + i][col]);
+                    }
+                }
+                row += matchCount;
+            } else {
+                ++row;
             }
         }
     }
 
-    return anyMatches;
+    // Check horizontally
+    for (int row = 0; row < m_numRows; ++row) {
+        int col = 0;
+        while (col < m_numCols - 2) {
+            Colour color = m_grid[row][col].getColour();
+            if (color != Colour::Unknown) {
+                int matchCount = 1;
+                for (int i = 1; col + i < m_numCols && m_grid[row][col + i].getColour() == color; ++i) {
+                    ++matchCount;
+                }
+                if (matchCount >= 3) {
+                    for (int i = 0; i < matchCount; ++i) {
+                        jewelsToRemove.push_back(&m_grid[row][col + i]);
+                    }
+                }
+                col += matchCount;
+            } else {
+                ++col;
+            }
+        }
+    }
+
+    // Set the color of matched jewels to Unknown
+    for (Jewel *jewel : jewelsToRemove) {
+        jewel->setColour(Colour::Unknown);
+    }
+
+    return !jewelsToRemove.empty();
 }
