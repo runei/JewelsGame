@@ -2,12 +2,18 @@
 #include "../external/loguru.hpp"
 
 Grid::Grid(GameViewModel& viewModel)
-    : m_viewModel(viewModel), m_gridTexture(nullptr), m_dragging(false), m_dragJewelTexture(nullptr) {
+    : m_viewModel(viewModel), m_gridTexture(nullptr), m_dragging(false), m_dragJewelTexture(nullptr), m_explosionTexture(nullptr) {
 }
 
 Grid::~Grid() {
     if (m_gridTexture) {
         SDL_DestroyTexture(m_gridTexture);
+    }
+    if (m_dragJewelTexture) {
+        SDL_DestroyTexture(m_dragJewelTexture);
+    }
+    if (m_explosionTexture) {
+        SDL_DestroyTexture(m_explosionTexture);
     }
     clearTextureCache();
 }
@@ -57,6 +63,20 @@ void Grid::render(SDL_Renderer* renderer) {
 
             SDL_Rect destRect = {destX, destY, Constants::JEWEL_SIZE, Constants::JEWEL_SIZE};
             SDL_RenderCopy(renderer, m_dragJewelTexture, nullptr, &destRect);
+        }
+    }
+
+    // Render the explosion texture over the matching jewels
+    if (m_explosionTexture) {
+        for (int row = 0; row < m_viewModel.getNumRows(); ++row) {
+            for (int col = 0; col < m_viewModel.getNumCols(); ++col) {
+                if (m_viewModel.isColourUnknown(row, col)) {
+                    int destX = col * Constants::JEWEL_SIZE;
+                    int destY = row * Constants::JEWEL_SIZE;
+                    SDL_Rect destRect = {destX, destY, Constants::JEWEL_SIZE, Constants::JEWEL_SIZE};
+                    SDL_RenderCopy(renderer, m_explosionTexture, nullptr, &destRect);
+                }
+            }
         }
     }
 }
@@ -132,7 +152,7 @@ void Grid::handleMouseMotion(int x, int y) {
     }
 }
 
-void Grid::handleMouseRelease(int x, int y) {
+void Grid::handleMouseRelease(int x, int y, SDL_Renderer* renderer) {
     if (m_dragging) {
 
         int col = x / Constants::JEWEL_SIZE;
@@ -145,6 +165,11 @@ void Grid::handleMouseRelease(int x, int y) {
             m_gridTexture = nullptr;
 
             LOG_F(INFO, "Grid texture release reset.");
+        }
+
+        if (m_viewModel.removeMatches()) {
+            // Load the explosion texture
+            m_explosionTexture = getOrCreateTexture(renderer, "assets/images/Explosion.png");
         }
 
         m_dragging = false;

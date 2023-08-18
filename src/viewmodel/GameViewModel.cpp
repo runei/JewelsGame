@@ -31,6 +31,10 @@ bool GameViewModel::isJewelHighlighted(int row, int col) const {
     return m_grid[row][col].isHighlighted();
 }
 
+bool GameViewModel::isColourUnknown(int row, int col) const {
+    return getJewelColour(row, col) == Colour::Unknown;
+}
+
 bool GameViewModel::toggleJewelHighlight(int row, int col) {
     Jewel& jewel = m_grid[row][col];
 
@@ -105,3 +109,38 @@ void GameViewModel::fillGridRandomly() {
     }
 }
 
+bool GameViewModel::removeMatches() {
+    bool anyMatches = false;
+
+    // Check horizontally
+    for (int row = 0; row < m_numRows; ++row) {
+        for (int col = 0; col < m_numCols - 2; ++col) {
+            Colour color = m_grid[row][col].getColour();
+            if (color != Colour::Unknown &&
+                m_grid[row][col + 1].getColour() == color &&
+                m_grid[row][col + 2].getColour() == color) {
+                m_grid[row][col].setColour(Colour::Unknown);
+                m_grid[row][col + 1].setColour(Colour::Unknown);
+                m_grid[row][col + 2].setColour(Colour::Unknown);
+                anyMatches = true;
+            }
+        }
+    }
+
+    // Check vertically
+    for (int col = 0; col < m_numCols; ++col) {
+        for (int row = 0; row < m_numRows - 2; ++row) {
+            Colour color = m_grid[row][col].getColour();
+            if (color != Colour::Unknown &&
+                m_grid[row + 1][col].getColour() == color &&
+                m_grid[row + 2][col].getColour() == color) {
+                m_grid[row][col].setColour(Colour::Unknown);
+                m_grid[row + 1][col].setColour(Colour::Unknown);
+                m_grid[row + 2][col].setColour(Colour::Unknown);
+                anyMatches = true;
+            }
+        }
+    }
+
+    return anyMatches;
+}

@@ -16,6 +16,7 @@ public:
     int getNumCols() const;
     std::string getColourImgPath(int row, int col) const;
     bool isJewelHighlighted(int row, int col) const;
+    bool isColourUnknown(int row, int col) const;
 
     bool toggleJewelHighlight(int row, int col);
 
@@ -23,6 +24,7 @@ public:
     void swapJewels(int row1, int col1, int row2, int col2);
     bool checkForMatches();
     void updateGrid();
+    bool removeMatches();
 
 private:
     int m_numRows;

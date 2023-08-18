@@ -17,7 +17,7 @@ public:
     void render(SDL_Renderer* renderer);
     void handleMouseClick(int x, int y, SDL_Renderer* renderer);
     void handleMouseMotion(int x, int y);
-    void handleMouseRelease(int x, int y);
+    void handleMouseRelease(int x, int y, SDL_Renderer* renderer);
     void clearTextureCache();
 
 private:
@@ -36,6 +36,8 @@ private:
     int m_dragDestCol;
 
     SDL_Texture* m_dragJewelTexture;
+    SDL_Texture* m_explosionTexture;
+
 };
 
 #endif // GRID_HPP
