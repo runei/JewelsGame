@@ -4,6 +4,7 @@
 #include "../external/loguru.hpp"
 
 #include <fstream>
+#include <random>
 
 ColourManager::ColourManager() {
 
@@ -41,6 +42,15 @@ Colour ColourManager::getColourByName(const std::string& name) {
 
 }
 
+Colour ColourManager::getRandomColour() const {
+    const int count = static_cast<int>(Colour::Unknown);
+
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<int> colourDistribution(0, count - 1);
+
+    return static_cast<Colour>(colourDistribution(gen));
+}
 
 bool ColourManager::loadColoursFromConfig() {
     try {

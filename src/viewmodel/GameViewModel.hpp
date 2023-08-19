@@ -25,6 +25,8 @@ public:
     bool checkForMatches();
     void updateGrid();
     bool removeMatches();
+    bool collapseEmptySpaces();
+    void fillEmptySpacesWithRandomColors();
 
 private:
     int m_numRows;
@@ -42,6 +44,7 @@ private:
     void setJewelColour(int row, int col, Colour colour);
 
     void fillGridRandomly();
+
 };
 
 #endif // GAMEVIEWMODEL_HPP

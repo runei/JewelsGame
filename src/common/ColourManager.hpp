@@ -14,6 +14,7 @@ public:
 	~ColourManager();
 
 	std::string getImgPathForColour(const Colour& colour) const;
+	Colour getRandomColour() const;
 
 private:
 
@@ -22,7 +23,7 @@ private:
 	Colour getColourByName(const std::string& name);
 
 	bool loadColoursFromConfig();
-	// SDL_Texture* loadTexture(const std::string& imagePath);
+
 
 };
 

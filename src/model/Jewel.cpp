@@ -1,8 +1,8 @@
 #include "Jewel.hpp"
 
-Jewel::Jewel() : m_colour(Colour::Unknown) {}
+Jewel::Jewel() : m_colour(Colour::Unknown), m_highlighted(false) {}
 
-Jewel::Jewel(Colour colour) : m_colour(colour) {}
+Jewel::Jewel(Colour colour) : m_colour(colour), m_highlighted(false) {}
 
 Colour Jewel::getColour() const {
     return m_colour;

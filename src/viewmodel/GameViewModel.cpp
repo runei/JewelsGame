@@ -85,23 +85,19 @@ void GameViewModel::updateGrid() {
 }
 
 void GameViewModel::fillGridRandomly() {
-    const int count = static_cast<int>(Colour::Unknown);
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> colourDistribution(0, count - 1);
 
     for (int row = 0; row < m_numRows; ++row) {
         for (int col = 0; col < m_numCols; ++col) {
-            Colour randomColour = static_cast<Colour>(colourDistribution(gen));
+            Colour randomColour = m_colourManager.getRandomColour();
 
             // Ensure no immediate horizontal or vertical match
             while (col >= 2 && m_grid[row][col - 1].getColour() == randomColour && m_grid[row][col - 2].getColour() == randomColour) {
-                randomColour = static_cast<Colour>(colourDistribution(gen));
+                randomColour = m_colourManager.getRandomColour();
             }
 
             while (row >= 2 && m_grid[row - 1][col].getColour() == randomColour && m_grid[row - 2][col].getColour() == randomColour) {
-                randomColour = static_cast<Colour>(colourDistribution(gen));
+                randomColour = m_colourManager.getRandomColour();
             }
 
             m_grid[row][col] = Jewel(randomColour);
@@ -163,5 +159,43 @@ bool GameViewModel::removeMatches() {
         jewel->setColour(Colour::Unknown);
     }
 
+    collapseEmptySpaces();
+
     return !jewelsToRemove.empty();
+}
+
+bool GameViewModel::collapseEmptySpaces() {
+    bool anySwap = false;
+
+    for (int col = 0; col < m_numCols; ++col) {
+        int destRow = m_numRows - 1;
+        for (int row = m_numRows - 1; row >= 0; --row) {
+            Colour color = m_grid[row][col].getColour();
+            if (color == Colour::Unknown) {
+                // Find the first non-empty jewel in the column above
+                int swapRow = row - 1;
+                while (swapRow >= 0 && m_grid[swapRow][col].getColour() == Colour::Unknown) {
+                    --swapRow;
+                }
+                if (swapRow >= 0) {
+                    std::swap(m_grid[row][col], m_grid[swapRow][col]);
+                    anySwap = true;
+                }
+            }
+        }
+    }
+
+    return anySwap;
+}
+
+// Add this function to fill empty spaces with random colors
+void GameViewModel::fillEmptySpacesWithRandomColors() {
+    for (int row = m_numRows - 1; row >= 0; --row) {
+        for (int col = 0; col < m_numCols; ++col) {
+            if (getJewelColour(row, col) == Colour::Unknown) {
+                Colour randomColor = m_colourManager.getRandomColour();
+                setJewelColour(row, col, randomColor);
+            }
+        }
+    }
 }

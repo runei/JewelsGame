@@ -9,7 +9,7 @@ public:
     static constexpr const char* COLOUR_CONFIG_PATH = "config/ColourConfig.json";
 
     // Frames
-    static constexpr int FRAME_RATE = 120;
+    static constexpr int FRAME_RATE = 60;
     static constexpr int TIME_PER_FRAME = 1000 / FRAME_RATE;
 
 
@@ -25,6 +25,9 @@ public:
     // Offsets for grid in the screen
     static constexpr int OFFSET_ROW = 0;
     static constexpr int OFFSET_COL = 0;
+
+    // The delay (in seconds) between removing jewels and collapsing
+    static constexpr double GRID_COLLAPSE_DELAY = 0.5;
 
     // Game-related constants
     static constexpr int INITIAL_SCORE = 0;

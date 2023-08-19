@@ -19,6 +19,7 @@ public:
     void handleMouseMotion(int x, int y);
     void handleMouseRelease(int x, int y, SDL_Renderer* renderer);
     void clearTextureCache();
+    void updateGrid();
 
 private:
     SDL_Texture* getOrCreateTexture(SDL_Renderer* renderer, const std::string& imagePath);

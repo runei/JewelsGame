@@ -1,7 +1,7 @@
 #include "Game.hpp"
 #include "../external/loguru.hpp"
 
-Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_grid(m_gameViewModel) {}
+Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_grid(m_gameViewModel), m_collapseTimer(Constants::GRID_COLLAPSE_DELAY) {}
 
 Game::~Game() {
     m_grid.clearTextureCache();
@@ -81,9 +81,7 @@ void Game::handleEvents() {
 
         case SDL_MOUSEBUTTONDOWN:
             if (event.button.button == SDL_BUTTON_LEFT) {
-                int mouseX = event.button.x;
-                int mouseY = event.button.y;
-                m_grid.handleMouseClick(mouseX, mouseY, m_renderer);
+                m_grid.handleMouseClick(event.button.x, event.button.y, m_renderer);
             }
             break;
 
@@ -93,9 +91,7 @@ void Game::handleEvents() {
 
         case SDL_MOUSEBUTTONUP:
             if (event.button.button == SDL_BUTTON_LEFT) {
-                int mouseX = event.button.x;
-                int mouseY = event.button.y;
-                m_grid.handleMouseRelease(mouseX, mouseY, m_renderer);
+                m_grid.handleMouseRelease(event.button.x, event.button.y, m_renderer);
             }
             break;
 
@@ -104,12 +100,41 @@ void Game::handleEvents() {
     }
 }
 
+void Game::resetTimer(){
+    m_collapseTimer = Constants::GRID_COLLAPSE_DELAY;
+}
+
+void Game::updateCollapseAndFill(const double deltaTime) {
+    bool jewelsRemoved = m_gameViewModel.removeMatches();
+
+    // Reset the timer when jewels are removed
+    if (jewelsRemoved) {
+        m_grid.updateGrid();
+        resetTimer();
+    }
+
+    // Update the collapse timer
+    m_collapseTimer -= deltaTime;
+
+    // Perform collapse when the timer reaches zero
+    if (m_collapseTimer <= 0) {
+        bool collapsed = m_gameViewModel.collapseEmptySpaces();
+        if (collapsed) {
+            m_grid.updateGrid();
+            resetTimer();
+
+            // m_gameViewModel.fillEmptySpacesWithRandomColors();
+        }
+    }
+}
+
 void Game::update() {
+
+
     Uint32 currentTime = SDL_GetTicks();
     Uint32 deltaTime = currentTime - m_prevFrameTime;
 
-    // Update game logic based on deltaTime
-    // ...
+    updateCollapseAndFill(deltaTime);
 
     m_prevFrameTime = currentTime;
 

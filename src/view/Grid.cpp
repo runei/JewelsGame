@@ -190,3 +190,7 @@ void Grid::clearTextureCache() {
     }
     m_textureCache.clear();
 }
+
+void Grid::updateGrid() {
+    m_gridTexture = nullptr;
+}
