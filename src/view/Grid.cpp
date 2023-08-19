@@ -137,7 +137,7 @@ void Grid::handleMouseClick(int x, int y, SDL_Renderer* renderer) {
             std::string imagePath = m_viewModel.getColourImgPath(m_dragStartRow, m_dragStartCol);
             m_dragJewelTexture = getOrCreateTexture(renderer, imagePath);
 
-            m_gridTexture = nullptr;
+            updateGrid();
 
             LOG_F(INFO, "Grid texture reset.");
         }
@@ -167,10 +167,10 @@ void Grid::handleMouseRelease(int x, int y, SDL_Renderer* renderer) {
             LOG_F(INFO, "Grid texture release reset.");
         }
 
-        if (m_viewModel.removeMatches()) {
-            // Load the explosion texture
-            m_explosionTexture = getOrCreateTexture(renderer, "assets/images/Explosion.png");
-        }
+        // if (m_viewModel.removeMatches()) {
+        //     // Load the explosion texture
+        //     // m_explosionTexture = getOrCreateTexture(renderer, "assets/images/Explosion.png");
+        // }
 
         m_dragging = false;
         m_dragStartCol = -1;

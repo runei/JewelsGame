@@ -26,9 +26,6 @@ public:
     static constexpr int OFFSET_ROW = 0;
     static constexpr int OFFSET_COL = 0;
 
-    // The delay (in seconds) between removing jewels and collapsing
-    static constexpr double GRID_COLLAPSE_DELAY = 0.5;
-
     // Game-related constants
     static constexpr int INITIAL_SCORE = 0;
 

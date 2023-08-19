@@ -1,7 +1,10 @@
 #include "Game.hpp"
 #include "../external/loguru.hpp"
 
-Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_grid(m_gameViewModel), m_collapseTimer(Constants::GRID_COLLAPSE_DELAY) {}
+Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_grid(m_gameViewModel) {
+
+    resetTimer();
+}
 
 Game::~Game() {
     m_grid.clearTextureCache();
@@ -101,40 +104,27 @@ void Game::handleEvents() {
 }
 
 void Game::resetTimer(){
-    m_collapseTimer = Constants::GRID_COLLAPSE_DELAY;
-}
-
-void Game::updateCollapseAndFill(const double deltaTime) {
-    bool jewelsRemoved = m_gameViewModel.removeMatches();
-
-    // Reset the timer when jewels are removed
-    if (jewelsRemoved) {
-        m_grid.updateGrid();
-        resetTimer();
-    }
-
-    // Update the collapse timer
-    m_collapseTimer -= deltaTime;
-
-    // Perform collapse when the timer reaches zero
-    if (m_collapseTimer <= 0) {
-        bool collapsed = m_gameViewModel.collapseEmptySpaces();
-        if (collapsed) {
-            m_grid.updateGrid();
-            resetTimer();
-
-            // m_gameViewModel.fillEmptySpacesWithRandomColors();
-        }
-    }
+    m_collapseTimer = Constants::TIME_PER_FRAME;
 }
 
 void Game::update() {
 
-
     Uint32 currentTime = SDL_GetTicks();
     Uint32 deltaTime = currentTime - m_prevFrameTime;
 
-    updateCollapseAndFill(deltaTime);
+    m_collapseTimer -= deltaTime;
+
+    if (m_collapseTimer <= 0) {
+
+        if (m_gameViewModel.fillEmptySpacesWithRandomColors()) {
+            m_grid.updateGrid();
+        } else if (m_gameViewModel.collapseEmptySpaces()) {
+            m_grid.updateGrid();
+        } else if (m_gameViewModel.removeMatches()) {
+            m_grid.updateGrid();
+        }
+        resetTimer();
+    }
 
     m_prevFrameTime = currentTime;
 

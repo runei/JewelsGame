@@ -40,7 +40,7 @@ private:
     Grid m_grid;
 
     bool m_isRunning;
-    double m_collapseTimer;
+    int m_collapseTimer;
 
 
     // Initialization functions
@@ -54,7 +54,7 @@ private:
     SDL_Texture* loadTexture(const std::string& imagePath);
     bool initializeResources();
     void resetTimer();
-    void updateCollapseAndFill(const double deltaTime);
+    void updateCollapseAndFill(const Uint32 deltaTime);
 };
 
 #endif // GAME_HPP

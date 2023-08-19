@@ -22,11 +22,9 @@ public:
 
     // game functions
     void swapJewels(int row1, int col1, int row2, int col2);
-    bool checkForMatches();
-    void updateGrid();
     bool removeMatches();
     bool collapseEmptySpaces();
-    void fillEmptySpacesWithRandomColors();
+    bool fillEmptySpacesWithRandomColors();
 
 private:
     int m_numRows;
