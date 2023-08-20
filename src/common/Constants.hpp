@@ -19,8 +19,8 @@ public:
     static constexpr int JEWEL_SIZE = 64;
 
     // Screen dimensions
-    static constexpr int SCREEN_WIDTH = 800;//JEWEL_SIZE * GRID_ROWS; //800
-    static constexpr int SCREEN_HEIGHT = 800;//JEWEL_SIZE * GRID_COLS; //600
+    static constexpr int SCREEN_WIDTH = JEWEL_SIZE * (GRID_ROWS+4); //800
+    static constexpr int SCREEN_HEIGHT = JEWEL_SIZE * GRID_COLS; //600
 
     // Offsets for grid in the screen
     static constexpr int OFFSET_ROW = 0;

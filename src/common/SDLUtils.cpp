@@ -5,6 +5,8 @@ void SDLUtils::initializeSDL() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     	throw SDLException("SDL initialization failed", SDL_GetError());
     }
+
+    TTF_Init();
 }
 
 SDL_Window* SDLUtils::createWindow(const char* title, const int width, const int height) noexcept(false) {
@@ -46,6 +48,14 @@ SDL_Texture* SDLUtils::loadImage(SDL_Renderer* renderer, const std::string& imag
     }
 
     return texture;
+}
+
+TTF_Font* SDLUtils::getFont() {
+    TTF_Font* font = TTF_OpenFont("assets/fonts/OldLondon.ttf", 36);
+    if (!font) {
+        LOG_F(ERROR, "Failed to load font: %s", TTF_GetError());
+    }
+    return font;
 }
 
 void SDLUtils::destroy(SDL_Texture* texture) {

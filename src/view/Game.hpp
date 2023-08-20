@@ -6,6 +6,7 @@
 #include "../viewmodel/GameViewModel.hpp"
 #include "../common/Constants.hpp"
 #include "Grid.hpp"
+#include "Scoreboard.hpp"
 
 
 class Game {
@@ -38,6 +39,7 @@ private:
 
     GameViewModel m_gameViewModel;
     Grid m_grid;
+    Scoreboard m_scoreboard;
 
     bool m_isRunning;
     int m_collapseTimer;

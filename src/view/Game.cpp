@@ -110,7 +110,7 @@ void Game::render() {
 
     renderBackground();
     m_grid.render();
-    // m_scoreboard.render();
+    m_scoreboard.render();
 
     SDL_RenderPresent(m_renderer);
 }

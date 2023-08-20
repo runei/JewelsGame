@@ -3,6 +3,7 @@
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
+#include "SDL2/SDL_ttf.h"
 #include "SDLException.hpp"
 #include <string>
 
@@ -15,6 +16,8 @@ namespace SDLUtils {
 	SDL_Renderer* createRenderer(SDL_Window* window) noexcept(false);
 
 	SDL_Texture* loadImage(SDL_Renderer* renderer, const std::string& imagePath) noexcept(false);
+
+	TTF_Font* getFont();
 
 	void destroy(SDL_Texture* texture);
 	void destroy(SDL_Renderer* renderer);
