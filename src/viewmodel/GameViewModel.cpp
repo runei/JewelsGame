@@ -2,7 +2,8 @@
 #include <random>
 #include "../external/loguru.hpp"
 
-GameViewModel::GameViewModel(int numRows, int numCols) : m_numRows(numRows), m_numCols(numCols), m_grid(numRows, std::vector<Jewel>(numCols)), m_highlightedRow(NOT_HIGHLIGHTED), m_highlightedCol(NOT_HIGHLIGHTED) {
+GameViewModel::GameViewModel(int numRows, int numCols) : m_numRows(numRows), m_numCols(numCols), m_grid(numRows, std::vector<Jewel>(numCols)), m_highlightedRow(NOT_HIGHLIGHTED), m_highlightedCol(NOT_HIGHLIGHTED), m_score(0) {
+
 	fillGridRandomly();
 }
 
@@ -33,6 +34,10 @@ bool GameViewModel::isJewelHighlighted(int row, int col) const {
 
 bool GameViewModel::isColourUnknown(int row, int col) const {
     return getJewelColour(row, col) == Colour::Unknown;
+}
+
+int GameViewModel::getScore() const {
+    return m_score;
 }
 
 bool GameViewModel::toggleJewelHighlight(int row, int col) {
@@ -147,6 +152,7 @@ bool GameViewModel::removeMatches() {
     // Set the color of matched jewels to Unknown
     for (Jewel *jewel : jewelsToRemove) {
         jewel->setColour(Colour::Unknown);
+        m_score++;
     }
 
     return !jewelsToRemove.empty();

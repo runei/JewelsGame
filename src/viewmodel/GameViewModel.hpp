@@ -25,6 +25,7 @@ public:
     bool removeMatches();
     bool collapseEmptySpaces();
     bool fillEmptySpacesWithRandomColors();
+    int getScore() const;
 
 private:
     int m_numRows;
@@ -37,6 +38,8 @@ private:
 
     int m_highlightedRow;
     int m_highlightedCol;
+
+    int m_score;
 
     Colour getJewelColour(int row, int col) const;
     void setJewelColour(int row, int col, Colour colour);

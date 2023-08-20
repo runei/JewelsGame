@@ -27,7 +27,8 @@ void Scoreboard::render() {
 	renderBackground();
 
 	write("SCORE:", 1, 1.4);
-	write("0 0 0 0", 1.25, 2.1);
+
+    writeScore();
 
 }
 
@@ -45,6 +46,27 @@ void Scoreboard::write(const std::string& text, const double xpos, const double 
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
 
+}
+
+void Scoreboard::writeScore() {
+
+    std::string scoreText;
+    std::string scoreValueStr = std::to_string(m_gameViewModel.getScore());
+
+
+    const int scoreLength = 5;
+
+    // Add leading zeros to make the total length 4 characters
+    while (scoreValueStr.length() < scoreLength) {
+        scoreValueStr = "0" + scoreValueStr;
+    }
+
+    for (int i = 0; i < scoreLength; ++i) {
+        scoreText += scoreValueStr[i];
+        scoreText += " ";
+    }
+
+    write(scoreText, 1.05, 2.1);
 }
 
 void Scoreboard::renderBackground() {
