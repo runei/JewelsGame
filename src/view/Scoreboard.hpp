@@ -27,7 +27,7 @@ private:
 
     void write(const std::string& text, const double xpos, const double ypos);
 
-    void writeScore();
+    void writeScore(const double xpos, const double ypos);
 
     int getXPos(const double offset) const;
     int getYPos(const double offset) const;

@@ -27,9 +27,10 @@ void Scoreboard::render() {
 	renderBackground();
 
 	write("SCORE:", 1, 1.4);
+    writeScore(1.05, 2.1);
 
-    writeScore();
-
+    write("TIME:", 1, 3.4);
+    write(std::to_string(m_gameViewModel.getTimeRemaining()), 1.75, 4.1);
 }
 
 void Scoreboard::write(const std::string& text, const double xpos, const double ypos) {
@@ -48,7 +49,7 @@ void Scoreboard::write(const std::string& text, const double xpos, const double 
 
 }
 
-void Scoreboard::writeScore() {
+void Scoreboard::writeScore(const double xpos, const double ypos) {
 
     std::string scoreText;
     std::string scoreValueStr = std::to_string(m_gameViewModel.getScore());
@@ -66,7 +67,7 @@ void Scoreboard::writeScore() {
         scoreText += " ";
     }
 
-    write(scoreText, 1.05, 2.1);
+    write(scoreText, xpos, ypos);
 }
 
 void Scoreboard::renderBackground() {
@@ -87,5 +88,11 @@ void Scoreboard::renderBackground() {
     SDL_SetRenderDrawColor(*m_renderer, 0, 0, 0, 0);
     SDL_Rect rect2 = {getXPos(1), getYPos(2), Constants::JEWEL_SIZE * 2, int(Constants::JEWEL_SIZE * 0.75) };
     SDL_RenderFillRect(*m_renderer, &rect2);
+
+
+    // Draw the time background black
+    SDL_SetRenderDrawColor(*m_renderer, 0, 0, 0, 0);
+    SDL_Rect rect3 = {getXPos(1), getYPos(4), Constants::JEWEL_SIZE * 2, int(Constants::JEWEL_SIZE * 0.75) };
+    SDL_RenderFillRect(*m_renderer, &rect3);
 
 }

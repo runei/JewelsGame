@@ -2,6 +2,7 @@
 #define GAME_VIEW_MODEL_HPP
 
 #include "../model/Jewel.hpp"
+#include "../model/Timer.hpp"
 #include "../common/ColourManager.hpp"
 #include <vector>
 #include <string>
@@ -26,6 +27,7 @@ public:
     bool collapseEmptySpaces();
     bool fillEmptySpacesWithRandomColors();
     int getScore() const;
+    int getTimeRemaining() const;
 
 private:
     int m_numRows;
@@ -40,6 +42,8 @@ private:
     int m_highlightedCol;
 
     int m_score;
+
+    Timer m_timer;
 
     Colour getJewelColour(int row, int col) const;
     void setJewelColour(int row, int col, Colour colour);

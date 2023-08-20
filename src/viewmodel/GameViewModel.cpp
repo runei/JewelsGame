@@ -5,6 +5,8 @@
 GameViewModel::GameViewModel(int numRows, int numCols) : m_numRows(numRows), m_numCols(numCols), m_grid(numRows, std::vector<Jewel>(numCols)), m_highlightedRow(NOT_HIGHLIGHTED), m_highlightedCol(NOT_HIGHLIGHTED), m_score(0) {
 
 	fillGridRandomly();
+
+    m_timer.start(120);
 }
 
 int GameViewModel::getNumRows() const {
@@ -38,6 +40,10 @@ bool GameViewModel::isColourUnknown(int row, int col) const {
 
 int GameViewModel::getScore() const {
     return m_score;
+}
+
+int GameViewModel::getTimeRemaining() const {
+    return (int) m_timer.getTimeRemaining();
 }
 
 bool GameViewModel::toggleJewelHighlight(int row, int col) {
