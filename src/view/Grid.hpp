@@ -11,22 +11,23 @@
 
 class Grid {
 public:
-    explicit Grid(GameViewModel& viewModel);
+    Grid(SDL_Renderer** renderer, GameViewModel& viewModel);
     ~Grid();
 
-    void render(SDL_Renderer* renderer);
-    void handleMouseClick(int x, int y, SDL_Renderer* renderer);
+    void render();
+    void handleMouseClick(int x, int y);
     void handleMouseMotion(int x, int y);
-    void handleMouseRelease(int x, int y, SDL_Renderer* renderer);
+    void handleMouseRelease(int x, int y);
     void clearTextureCache();
     void updateGrid();
 
 private:
-    SDL_Texture* getOrCreateTexture(SDL_Renderer* renderer, const std::string& imagePath);
-    void createGridTexture(SDL_Renderer* renderer);
+    SDL_Texture* getOrCreateTexture(const std::string& imagePath);
+    void createGridTexture();
 
     GameViewModel& m_viewModel;
 
+    SDL_Renderer** m_renderer;
     SDL_Texture* m_gridTexture;
     std::unordered_map<std::string, SDL_Texture*> m_textureCache;
 

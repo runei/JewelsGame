@@ -2,7 +2,7 @@
 #include "../external/loguru.hpp"
 #include "../common/SDLUtils.hpp"
 
-Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_grid(m_gameViewModel), m_window(nullptr), m_renderer(nullptr), m_backgroundTexture(nullptr) {
+Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_window(nullptr), m_renderer(nullptr), m_backgroundTexture(nullptr), m_grid(&m_renderer, m_gameViewModel), m_scoreboard(&m_renderer, m_gameViewModel) {
 
     resetTimer();
 }
@@ -58,7 +58,7 @@ void Game::handleEvents() {
 
         case SDL_MOUSEBUTTONDOWN:
             if (event.button.button == SDL_BUTTON_LEFT) {
-                m_grid.handleMouseClick(event.button.x, event.button.y, m_renderer);
+                m_grid.handleMouseClick(event.button.x, event.button.y);
             }
             break;
 
@@ -68,7 +68,7 @@ void Game::handleEvents() {
 
         case SDL_MOUSEBUTTONUP:
             if (event.button.button == SDL_BUTTON_LEFT) {
-                m_grid.handleMouseRelease(event.button.x, event.button.y, m_renderer);
+                m_grid.handleMouseRelease(event.button.x, event.button.y);
             }
             break;
 
@@ -109,7 +109,8 @@ void Game::render() {
     SDL_RenderClear(m_renderer);
 
     renderBackground();
-    m_grid.render(m_renderer);
+    m_grid.render();
+    // m_scoreboard.render();
 
     SDL_RenderPresent(m_renderer);
 }

@@ -2,8 +2,8 @@
 #include "../external/loguru.hpp"
 #include "../common/SDLUtils.hpp"
 
-Grid::Grid(GameViewModel& viewModel)
-    : m_viewModel(viewModel), m_gridTexture(nullptr), m_dragging(false), m_dragJewelTexture(nullptr), m_explosionTexture(nullptr) {
+Grid::Grid(SDL_Renderer** renderer, GameViewModel& viewModel)
+    : m_renderer(renderer), m_viewModel(viewModel), m_gridTexture(nullptr), m_dragging(false), m_dragJewelTexture(nullptr), m_explosionTexture(nullptr) {
 }
 
 Grid::~Grid() {
@@ -14,7 +14,7 @@ Grid::~Grid() {
     clearTextureCache();
 }
 
-SDL_Texture* Grid::getOrCreateTexture(SDL_Renderer* renderer, const std::string& imagePath) {
+SDL_Texture* Grid::getOrCreateTexture(const std::string& imagePath) {
 
     if (m_textureCache.count(imagePath)) {
         return m_textureCache[imagePath];
@@ -24,7 +24,7 @@ SDL_Texture* Grid::getOrCreateTexture(SDL_Renderer* renderer, const std::string&
 
     try {
 
-        texture = SDLUtils::loadImage(renderer, imagePath);
+        texture = SDLUtils::loadImage(*m_renderer, imagePath);
 
         m_textureCache[imagePath] = texture;
 
@@ -37,20 +37,20 @@ SDL_Texture* Grid::getOrCreateTexture(SDL_Renderer* renderer, const std::string&
     return texture;
 }
 
-void Grid::render(SDL_Renderer* renderer) {
+void Grid::render() {
     if (!m_gridTexture) {
-        createGridTexture(renderer);
+        createGridTexture();
     }
 
     // Set the rendering viewport to match the grid size
     SDL_Rect viewport = {0, 0, m_viewModel.getNumCols() * Constants::JEWEL_SIZE, m_viewModel.getNumRows() * Constants::JEWEL_SIZE};
-    SDL_RenderSetViewport(renderer, &viewport);
+    SDL_RenderSetViewport(*m_renderer, &viewport);
 
     // Render the grid texture
-    SDL_RenderCopy(renderer, m_gridTexture, nullptr, nullptr);
+    SDL_RenderCopy(*m_renderer, m_gridTexture, nullptr, nullptr);
 
     // Reset the rendering viewport
-    SDL_RenderSetViewport(renderer, nullptr);
+    SDL_RenderSetViewport(*m_renderer, nullptr);
 
     if (m_dragging) {
         if (m_dragJewelTexture) {
@@ -58,7 +58,7 @@ void Grid::render(SDL_Renderer* renderer) {
             int destY = m_dragDestRow - Constants::JEWEL_SIZE / 2;
 
             SDL_Rect destRect = {destX, destY, Constants::JEWEL_SIZE, Constants::JEWEL_SIZE};
-            SDL_RenderCopy(renderer, m_dragJewelTexture, nullptr, &destRect);
+            SDL_RenderCopy(*m_renderer, m_dragJewelTexture, nullptr, &destRect);
         }
     }
 
@@ -70,15 +70,15 @@ void Grid::render(SDL_Renderer* renderer) {
                     int destX = col * Constants::JEWEL_SIZE;
                     int destY = row * Constants::JEWEL_SIZE;
                     SDL_Rect destRect = {destX, destY, Constants::JEWEL_SIZE, Constants::JEWEL_SIZE};
-                    SDL_RenderCopy(renderer, m_explosionTexture, nullptr, &destRect);
+                    SDL_RenderCopy(*m_renderer, m_explosionTexture, nullptr, &destRect);
                 }
             }
         }
     }
 }
 
-void Grid::createGridTexture(SDL_Renderer* renderer) {
-    m_gridTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_viewModel.getNumCols() * Constants::JEWEL_SIZE, m_viewModel.getNumRows() * Constants::JEWEL_SIZE);
+void Grid::createGridTexture() {
+    m_gridTexture = SDL_CreateTexture(*m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_viewModel.getNumCols() * Constants::JEWEL_SIZE, m_viewModel.getNumRows() * Constants::JEWEL_SIZE);
 
 
     if (!m_gridTexture) {
@@ -86,37 +86,38 @@ void Grid::createGridTexture(SDL_Renderer* renderer) {
         return;
     }
 
-    SDL_SetRenderTarget(renderer, m_gridTexture);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderTarget(*m_renderer, m_gridTexture);
+    SDL_SetRenderDrawColor(*m_renderer, 0, 0, 0, 0);
+    SDL_RenderClear(
+*m_renderer);
 
     for (int row = 0; row < m_viewModel.getNumRows(); ++row) {
         for (int col = 0; col < m_viewModel.getNumCols(); ++col) {
             std::string imagePath = m_viewModel.getColourImgPath(row, col);
             if (!imagePath.empty()) {
-                SDL_Texture* jewelTexture = getOrCreateTexture(renderer, imagePath);
+                SDL_Texture* jewelTexture = getOrCreateTexture(imagePath);
                 if (jewelTexture) {
                     int destX = col * Constants::JEWEL_SIZE;
                     int destY = row * Constants::JEWEL_SIZE;
 
                     if (m_viewModel.isJewelHighlighted(row, col)) {
-                        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+                        SDL_SetRenderDrawColor(*m_renderer, 255, 255, 0, 255);
                         SDL_Rect highlightRect = {destX, destY, Constants::JEWEL_SIZE, Constants::JEWEL_SIZE};
-                        SDL_RenderDrawRect(renderer, &highlightRect);
-                        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                        SDL_RenderDrawRect(*m_renderer, &highlightRect);
+                        SDL_SetRenderDrawColor(*m_renderer, 0, 0, 0, 255);
                     }
 
                     SDL_Rect destRect = {destX, destY, Constants::JEWEL_SIZE, Constants::JEWEL_SIZE};
-                    SDL_RenderCopy(renderer, jewelTexture, nullptr, &destRect);
+                    SDL_RenderCopy(*m_renderer, jewelTexture, nullptr, &destRect);
                 }
             }
         }
     }
 
-    SDL_SetRenderTarget(renderer, nullptr);
+    SDL_SetRenderTarget(*m_renderer, nullptr);
 }
 
-void Grid::handleMouseClick(int x, int y, SDL_Renderer* renderer) {
+void Grid::handleMouseClick(int x, int y) {
     int col = x / Constants::JEWEL_SIZE;
     int row = y / Constants::JEWEL_SIZE;
 
@@ -131,7 +132,7 @@ void Grid::handleMouseClick(int x, int y, SDL_Renderer* renderer) {
 
             // Load the jewel texture for dragging
             std::string imagePath = m_viewModel.getColourImgPath(m_dragStartRow, m_dragStartCol);
-            m_dragJewelTexture = getOrCreateTexture(renderer, imagePath);
+            m_dragJewelTexture = getOrCreateTexture(imagePath);
 
             updateGrid();
 
@@ -148,7 +149,7 @@ void Grid::handleMouseMotion(int x, int y) {
     }
 }
 
-void Grid::handleMouseRelease(int x, int y, SDL_Renderer* renderer) {
+void Grid::handleMouseRelease(int x, int y) {
     if (m_dragging) {
 
         int col = x / Constants::JEWEL_SIZE;
@@ -165,7 +166,7 @@ void Grid::handleMouseRelease(int x, int y, SDL_Renderer* renderer) {
 
         // if (m_viewModel.removeMatches()) {
         //     // Load the explosion texture
-        //     // m_explosionTexture = getOrCreateTexture(renderer, "assets/images/Explosion.png");
+        //     // m_explosionTexture = getOrCreateTexture(*m_renderer, "assets/images/Explosion.png");
         // }
 
         m_dragging = false;
