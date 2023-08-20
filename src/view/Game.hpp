@@ -44,14 +44,11 @@ private:
 
 
     // Initialization functions
-    bool initializeSDL();
-    bool createWindowAndRenderer(const char* title, const int width, const int height);
     void initializeImages();
     void renderBackground();
 
     // Calculate and wait for the remaining time to achieve desired frame rate
     void delayIfNeeded();
-    SDL_Texture* loadTexture(const std::string& imagePath);
     bool initializeResources();
     void resetTimer();
     void updateCollapseAndFill(const Uint32 deltaTime);

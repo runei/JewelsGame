@@ -1,41 +1,37 @@
 #include "Grid.hpp"
 #include "../external/loguru.hpp"
+#include "../common/SDLUtils.hpp"
 
 Grid::Grid(GameViewModel& viewModel)
     : m_viewModel(viewModel), m_gridTexture(nullptr), m_dragging(false), m_dragJewelTexture(nullptr), m_explosionTexture(nullptr) {
 }
 
 Grid::~Grid() {
-    if (m_gridTexture) {
-        SDL_DestroyTexture(m_gridTexture);
-    }
-    if (m_dragJewelTexture) {
-        SDL_DestroyTexture(m_dragJewelTexture);
-    }
-    if (m_explosionTexture) {
-        SDL_DestroyTexture(m_explosionTexture);
-    }
+    SDLUtils::destroy(m_gridTexture);
+    SDLUtils::destroy(m_dragJewelTexture);
+    SDLUtils::destroy(m_explosionTexture);
+
     clearTextureCache();
 }
 
 SDL_Texture* Grid::getOrCreateTexture(SDL_Renderer* renderer, const std::string& imagePath) {
+
     if (m_textureCache.count(imagePath)) {
         return m_textureCache[imagePath];
     }
 
-    SDL_Surface* surface = IMG_Load(imagePath.c_str());
-    if (!surface) {
-        LOG_F(ERROR, "Error loading image: %s", imagePath.c_str());
-        return nullptr;
-    }
+    SDL_Texture* texture = nullptr;
 
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
+    try {
 
-    if (texture) {
+        texture = SDLUtils::loadImage(renderer, imagePath);
+
         m_textureCache[imagePath] = texture;
-    } else {
-        LOG_F(ERROR, "Error creating texture for image: %s", SDL_GetError());
+
+    } catch (const SDLException& e) {
+
+        LOG_F(ERROR, "%s: %s", e.what(), e.getSdlError());
+
     }
 
     return texture;
@@ -186,7 +182,7 @@ void Grid::handleMouseRelease(int x, int y, SDL_Renderer* renderer) {
 
 void Grid::clearTextureCache() {
     for (const auto& pair : m_textureCache) {
-        SDL_DestroyTexture(pair.second);
+        SDLUtils::destroy(pair.second);
     }
     m_textureCache.clear();
 }

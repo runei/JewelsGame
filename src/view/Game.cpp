@@ -1,7 +1,8 @@
 #include "Game.hpp"
 #include "../external/loguru.hpp"
+#include "../common/SDLUtils.hpp"
 
-Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_grid(m_gameViewModel) {
+Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_grid(m_gameViewModel), m_window(nullptr), m_renderer(nullptr), m_backgroundTexture(nullptr) {
 
     resetTimer();
 }
@@ -13,18 +14,22 @@ Game::~Game() {
 }
 
 bool Game::initialize(const char* title, const int width, const int height) {
-    if (!initializeSDL()) {
-        return false;
-    }
 
-    if (!createWindowAndRenderer(title, width, height)) {
-        cleanup();
-        return false;
-    }
+    try {
 
-    if (!initializeResources()) {
-        cleanup();
+        SDLUtils::initializeSDL();
+
+        m_window = SDLUtils::createWindow(title, width, height);
+
+        m_renderer = SDLUtils::createRenderer(m_window);
+
+        m_backgroundTexture = SDLUtils::loadImage(m_renderer, "assets/images/Backdrop13.jpg");
+
+    } catch (const SDLException& e) {
+
+        LOG_F(ERROR, "%s: %s", e.what(), e.getSdlError());
         return false;
+
     }
 
     m_prevFrameTime = SDL_GetTicks();
@@ -34,40 +39,9 @@ bool Game::initialize(const char* title, const int width, const int height) {
     return true;
 }
 
-bool Game::initializeSDL() {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-        LOG_F(ERROR, "SDL initialization failed: %s", SDL_GetError());
-        return false;
-    }
-    LOG_F(INFO, "SDL initialized successfully.");
-    return true;
-}
-
-bool Game::createWindowAndRenderer(const char* title, const int width, const int height) {
-    m_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, 0);
-    if (!m_window) {
-        LOG_F(ERROR, "SDL window creation failed: %s", SDL_GetError());
-        return false;
-    }
-    LOG_F(INFO, "SDL window created successfully.");
-
-    m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
-    if (!m_renderer) {
-        LOG_F(ERROR, "SDL renderer creation failed: %s", SDL_GetError());
-        return false;
-    }
-    LOG_F(INFO, "SDL renderer created successfully.");
-    return true;
-}
-
 bool Game::initializeResources() {
     LOG_F(INFO, "Initializing resources...");
 
-    m_backgroundTexture = loadTexture("assets/images/Backdrop13.jpg");
-    if (!m_backgroundTexture) {
-        cleanup();
-        return false;
-    }
 
     LOG_F(INFO, "Resources initialized successfully.");
     return true;
@@ -104,7 +78,7 @@ void Game::handleEvents() {
 }
 
 void Game::resetTimer(){
-    m_collapseTimer = Constants::TIME_PER_FRAME;
+    m_collapseTimer = 100;// Constants::TIME_PER_FRAME;
 }
 
 void Game::update() {
@@ -128,7 +102,7 @@ void Game::update() {
 
     m_prevFrameTime = currentTime;
 
-    delayIfNeeded();
+    // delayIfNeeded();
 }
 
 void Game::render() {
@@ -141,21 +115,10 @@ void Game::render() {
 }
 
 void Game::cleanup() {
-    if (m_backgroundTexture) {
-        SDL_DestroyTexture(m_backgroundTexture);
-        LOG_F(INFO, "Background texture destroyed.");
-        m_backgroundTexture = nullptr;
-    }
 
-    if (m_renderer) {
-        SDL_DestroyRenderer(m_renderer);
-        m_renderer = nullptr;
-    }
-
-    if (m_window) {
-        SDL_DestroyWindow(m_window);
-        m_window = nullptr;
-    }
+    SDLUtils::destroy(m_backgroundTexture);
+    SDLUtils::destroy(m_renderer);
+    SDLUtils::destroy(m_window);
 
     SDL_Quit();
 
@@ -182,21 +145,4 @@ void Game::delayIfNeeded() {
     }
 
     m_prevFrameTime = SDL_GetTicks();
-}
-
-SDL_Texture* Game::loadTexture(const std::string& imagePath) {
-    SDL_Surface* surface = IMG_Load(imagePath.c_str());
-    if (!surface) {
-        LOG_F(ERROR, "Error loading image: %s", imagePath.c_str());
-        return nullptr;
-    }
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-    SDL_FreeSurface(surface);
-
-    if (!texture) {
-        LOG_F(ERROR, "Failed to create texture from surface: %s", SDL_GetError());
-    }
-
-    return texture;
 }
