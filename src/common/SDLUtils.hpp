@@ -17,7 +17,9 @@ namespace SDLUtils {
 
 	SDL_Texture* loadImage(SDL_Renderer* renderer, const std::string& imagePath) noexcept(false);
 
-	TTF_Font* getFont();
+	const char* getFontPath();
+
+	SDL_Texture* createButtonTexture(SDL_Renderer* renderer, const std::string& buttonText, int x, int y, int width, int height);
 
 	void destroy(SDL_Texture* texture);
 	void destroy(SDL_Renderer* renderer);

@@ -3,6 +3,7 @@
 
 #include "../viewmodel/GameViewModel.hpp"
 #include "../common/Constants.hpp"
+#include "../components/Button.hpp"
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
@@ -19,9 +20,9 @@ public:
 
 private:
     SDL_Renderer** m_renderer;
-    TTF_Font* m_font;
-
     GameViewModel& m_gameViewModel;
+
+    Button m_newGameButton;
 
     void renderBackground();
 
@@ -29,8 +30,11 @@ private:
 
     void writeScore(const double xpos, const double ypos);
 
+    // The offset is in relation to the JEWEL_SIZE
     int getXPos(const double offset) const;
     int getYPos(const double offset) const;
+    int getWidth(const double offset) const;
+    int getHeight(const double offset) const;
 
 };
 

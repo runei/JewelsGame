@@ -8,8 +8,9 @@ MODEL_DIR = $(SRC_DIR)/model
 VIEW_DIR = $(SRC_DIR)/view
 VIEWMODEL_DIR = $(SRC_DIR)/viewmodel
 EXTERNAL_DIR = $(SRC_DIR)/external
+COMPONENTS_DIR = $(SRC_DIR)/components
 
-SRCS = $(wildcard $(SRC_DIR)/*.cpp $(COMMON_DIR)/*.cpp $(MODEL_DIR)/*.cpp $(VIEW_DIR)/*.cpp  $(VIEWMODEL_DIR)/*.cpp $(EXTERNAL_DIR)/*.cpp)
+SRCS = $(wildcard $(SRC_DIR)/*.cpp $(COMMON_DIR)/*.cpp $(MODEL_DIR)/*.cpp $(VIEW_DIR)/*.cpp  $(VIEWMODEL_DIR)/*.cpp $(EXTERNAL_DIR)/*.cpp $(COMPONENTS_DIR)/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 
 EXECUTABLE = jewelsgame

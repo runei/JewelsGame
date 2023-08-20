@@ -6,7 +6,6 @@ void SDLUtils::initializeSDL() {
     	throw SDLException("SDL initialization failed", SDL_GetError());
     }
 
-    TTF_Init();
 }
 
 SDL_Window* SDLUtils::createWindow(const char* title, const int width, const int height) noexcept(false) {
@@ -50,13 +49,44 @@ SDL_Texture* SDLUtils::loadImage(SDL_Renderer* renderer, const std::string& imag
     return texture;
 }
 
-TTF_Font* SDLUtils::getFont() {
-    TTF_Font* font = TTF_OpenFont("assets/fonts/OldLondon.ttf", 36);
-    if (!font) {
-        LOG_F(ERROR, "Failed to load font: %s", TTF_GetError());
-    }
-    return font;
+const char* SDLUtils::getFontPath() {
+
+    return "assets/fonts/OldLondon.ttf";
 }
+
+SDL_Texture* SDLUtils::createButtonTexture(SDL_Renderer* renderer, const std::string& buttonText, int x, int y, int width, int height) {
+
+    TTF_Init();
+
+    // Create a surface with grey background
+    SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
+    SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 100, 100, 100, 255)); // Grey color
+
+    // Create a font and render the button text
+    TTF_Font* font = TTF_OpenFont(getFontPath(), 28);
+    SDL_Color textColor = {255, 255, 255, 255};
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, buttonText.c_str(), textColor);
+
+    // Calculate text position to center it on the button
+    int textX = (width - textSurface->w) / 2;
+    int textY = (height - textSurface->h) / 2;
+
+    // Blit the text surface onto the button surface
+    SDL_Rect textRect = {textX, textY, textSurface->w, textSurface->h};
+    SDL_BlitSurface(textSurface, NULL, surface, &textRect);
+
+    // Create a texture from the button surface
+    SDL_Texture* buttonTexture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    // Clean up surfaces and fonts
+    TTF_CloseFont(font);
+    SDL_FreeSurface(surface);
+    SDL_FreeSurface(textSurface);
+
+    return buttonTexture;
+}
+
+
 
 void SDLUtils::destroy(SDL_Texture* texture) {
 	if (texture) {
