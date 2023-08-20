@@ -59,6 +59,7 @@ void Game::handleEvents() {
         case SDL_MOUSEBUTTONDOWN:
             if (event.button.button == SDL_BUTTON_LEFT) {
                 m_grid.handleMouseClick(event.button.x, event.button.y);
+                m_scoreboard.handleMouseClick(event);
             }
             break;
 

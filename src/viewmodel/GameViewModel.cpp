@@ -1,12 +1,14 @@
 #include "GameViewModel.hpp"
-#include <random>
 #include "../external/loguru.hpp"
+#include "../common/Constants.hpp"
+#include <random>
 
-GameViewModel::GameViewModel(int numRows, int numCols) : m_numRows(numRows), m_numCols(numCols), m_grid(numRows, std::vector<Jewel>(numCols)), m_highlightedRow(NOT_HIGHLIGHTED), m_highlightedCol(NOT_HIGHLIGHTED), m_score(0) {
+GameViewModel::GameViewModel(int numRows, int numCols) : m_numRows(numRows), m_numCols(numCols), m_grid(numRows, std::vector<Jewel>(numCols)), m_highlightedRow(NOT_HIGHLIGHTED), m_highlightedCol(NOT_HIGHLIGHTED) {
 
 	fillGridRandomly();
 
-    m_timer.start(120);
+    resetTime();
+    resetScore();
 }
 
 int GameViewModel::getNumRows() const {
@@ -104,6 +106,29 @@ void GameViewModel::fillGridRandomly() {
             m_grid[row][col] = Jewel(randomColour);
         }
     }
+}
+
+void GameViewModel::resetGrid() {
+    for (int row = 0; row < m_numRows; ++row) {
+        for (int col = 0; col < m_numCols; ++col) {
+            m_grid[row][col].setColour(Colour::Unknown);
+        }
+    }
+}
+
+void GameViewModel::resetTime() {
+    m_timer.start(Constants::INITIAL_TIME);
+}
+
+void GameViewModel::resetScore() {
+    m_score = 0;
+}
+
+void GameViewModel::reset() {
+    resetGrid();
+    // fillGridRandomly();
+    resetTime();
+    resetScore();
 }
 
 bool GameViewModel::removeMatches() {

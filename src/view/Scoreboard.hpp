@@ -18,6 +18,9 @@ public:
     void update();
     void render();
 
+
+    void handleMouseClick(const SDL_Event& event);
+
 private:
     SDL_Renderer** m_renderer;
     GameViewModel& m_gameViewModel;

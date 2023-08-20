@@ -6,6 +6,7 @@
 
 class Button {
 public:
+    Button();
     Button(SDL_Renderer** renderer, const char* buttonText, int x, int y, int width, int height);
     ~Button();
 

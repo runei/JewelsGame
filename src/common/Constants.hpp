@@ -28,6 +28,7 @@ public:
 
     // Game-related constants
     static constexpr int INITIAL_SCORE = 0;
+    static constexpr int INITIAL_TIME = 120;
 
 private:
     Constants(); // Prevent instantiation

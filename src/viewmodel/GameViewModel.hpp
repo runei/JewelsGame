@@ -26,6 +26,7 @@ public:
     bool removeMatches();
     bool collapseEmptySpaces();
     bool fillEmptySpacesWithRandomColors();
+    void reset();
     int getScore() const;
     int getTimeRemaining() const;
 
@@ -49,6 +50,9 @@ private:
     void setJewelColour(int row, int col, Colour colour);
 
     void fillGridRandomly();
+    void resetGrid();
+    void resetTime();
+    void resetScore();
 
 };
 

@@ -2,10 +2,12 @@
 #include "../common/SDLUtils.hpp"
 #include "../external/loguru.hpp"
 
-Scoreboard::Scoreboard(SDL_Renderer** renderer, GameViewModel& gameViewModel)
-    : m_renderer(renderer), m_gameViewModel(gameViewModel), m_newGameButton(m_renderer, "New Game", getXPos(1), getYPos(4), getWidth(2), getHeight(0.75))
- {
+Scoreboard::Scoreboard(SDL_Renderer** renderer, GameViewModel& gameViewModel) : m_renderer(renderer), m_gameViewModel(gameViewModel) {
 
+    m_newGameButton = Button(m_renderer, "New Game", getXPos(1), getYPos(4), getWidth(2), getHeight(0.75));
+    m_newGameButton.setOnclickFunction([this]() {
+        m_gameViewModel.reset();
+    });
 
 }
 
@@ -41,6 +43,15 @@ void Scoreboard::render() {
 
     m_newGameButton.render();
 }
+
+
+void Scoreboard::handleMouseClick(const SDL_Event& event) {
+
+    m_newGameButton.handleEvent(event);
+
+
+}
+
 
 void Scoreboard::write(const std::string& text, const double xpos, const double ypos) {
 

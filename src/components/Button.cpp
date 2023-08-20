@@ -7,6 +7,10 @@ Button::Button(SDL_Renderer** renderer, const char* buttonText, int x, int y, in
     m_rect = {x, y, width, height};
 }
 
+
+Button::Button() {}
+
+
 Button::~Button() {
     SDL_DestroyTexture(m_texture);
 }
