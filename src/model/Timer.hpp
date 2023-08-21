@@ -7,6 +7,7 @@ class Timer {
 public:
     Timer();
     void start(double duration);
+    void addTime(double duration);
     bool isRunning() const;
     double getTimeRemaining() const;
     void stop();

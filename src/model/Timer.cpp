@@ -19,6 +19,10 @@ double Timer::getTimeRemaining() const {
     return m_duration - elapsed.count();
 }
 
+void Timer::addTime(double duration) {
+    m_duration += duration;
+}
+
 void Timer::stop() {
     m_duration = 0.0;
 }

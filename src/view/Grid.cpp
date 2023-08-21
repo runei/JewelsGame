@@ -102,27 +102,29 @@ void Grid::createGridTexture() {
 }
 
 void Grid::handleMouseClick(int x, int y) {
-    int col = x / Constants::JEWEL_SIZE;
     int row = y / Constants::JEWEL_SIZE;
+    int col = x / Constants::JEWEL_SIZE;
 
-    if (col >= 0 && col < m_viewModel.getNumCols() && row >= 0 && row < m_viewModel.getNumRows()) {
+    if (row >= 0 && row < m_viewModel.getNumRows() && col >= 0 && col < m_viewModel.getNumCols()) {
         if (m_viewModel.toggleJewelHighlight(row, col)) {
 
             m_dragging = true;
             m_dragStart = std::make_pair(row, col);
-            m_dragDest.first = row * Constants::JEWEL_SIZE + Constants::JEWEL_SIZE / 2;
-            m_dragDest.second = col * Constants::JEWEL_SIZE + Constants::JEWEL_SIZE / 2;
+            m_dragDest.first = col * Constants::JEWEL_SIZE + Constants::JEWEL_SIZE / 2;
+            m_dragDest.second = row * Constants::JEWEL_SIZE + Constants::JEWEL_SIZE / 2;
 
             // Load the jewel texture for dragging
             std::string imagePath = m_viewModel.getColourImgPath(m_dragStart.first, m_dragStart.second);
             m_dragJewelTexture = getOrCreateTexture(imagePath);
 
+            // Update the grid and render
             updateGrid();
 
             LOG_F(INFO, "Grid texture reset.");
         }
     }
 }
+
 
 void Grid::handleMouseMotion(int x, int y) {
     if (m_dragging) {
@@ -155,6 +157,7 @@ void Grid::handleMouseRelease(int x, int y) {
         }
     }
 }
+
 
 void Grid::clearTextureCache() {
     for (const auto& pair : m_textureCache) {

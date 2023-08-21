@@ -19,8 +19,8 @@ public:
     static constexpr int JEWEL_SIZE = 64;
 
     // Screen dimensions
-    static constexpr int SCREEN_WIDTH = JEWEL_SIZE * (GRID_ROWS+4); //800
-    static constexpr int SCREEN_HEIGHT = JEWEL_SIZE * GRID_COLS; //600
+    static constexpr int SCREEN_WIDTH = JEWEL_SIZE * (GRID_ROWS+4);
+    static constexpr int SCREEN_HEIGHT = JEWEL_SIZE * GRID_COLS;
 
     // Offsets for grid in the screen
     static constexpr int OFFSET_ROW = 0;
@@ -28,10 +28,10 @@ public:
 
     // Game-related constants
     static constexpr int INITIAL_SCORE = 0;
-    static constexpr int INITIAL_TIME = 120;
+    static constexpr int INITIAL_TIME = 60;
 
 private:
-    Constants(); // Prevent instantiation
+    Constants();
 };
 
 #endif // CONSTANTS_HPP

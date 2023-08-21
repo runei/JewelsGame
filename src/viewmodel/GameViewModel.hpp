@@ -54,9 +54,12 @@ private:
     bool isPairInvalid(const std::pair<int, int>& pair);
 
     void fillGridRandomly();
+    Colour getRandomColorWithoutMatches(int row, int col);
+    bool hasHorizontalOrVerticalMatch(int row, int col, const Colour& colour) const;
     void resetGrid();
     void resetTime();
     void resetScore();
+    void addTime(int scoreAdded);
 
 };
 

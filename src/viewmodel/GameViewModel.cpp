@@ -56,6 +56,11 @@ int GameViewModel::getTimeRemaining() const {
     return (int) m_timer.getTimeRemaining();
 }
 
+void GameViewModel::addTime(int scoreAdded) {
+    const double timeToAdd = (double) scoreAdded / 2.0;
+    m_timer.addTime(timeToAdd);
+}
+
 bool GameViewModel::toggleJewelHighlight(int row, int col) {
     Jewel& jewel = m_grid[row][col];
 
@@ -96,25 +101,36 @@ void GameViewModel::swapJewels(const std::pair<int, int>& pos1, const std::pair<
 }
 
 void GameViewModel::fillGridRandomly() {
-
-
     for (int row = 0; row < m_gridSize.first; ++row) {
         for (int col = 0; col < m_gridSize.second; ++col) {
-            Colour randomColour = m_colourManager.getRandomColour();
-
-            // Ensure no immediate horizontal or vertical match
-            while (col >= 2 && m_grid[row][col - 1].getColour() == randomColour && m_grid[row][col - 2].getColour() == randomColour) {
-                randomColour = m_colourManager.getRandomColour();
-            }
-
-            while (row >= 2 && m_grid[row - 1][col].getColour() == randomColour && m_grid[row - 2][col].getColour() == randomColour) {
-                randomColour = m_colourManager.getRandomColour();
-            }
-
+            Colour randomColour = getRandomColorWithoutMatches(row, col);
             m_grid[row][col] = Jewel(randomColour);
         }
     }
 }
+
+Colour GameViewModel::getRandomColorWithoutMatches(int row, int col) {
+    Colour randomColour = m_colourManager.getRandomColour();
+
+    while (hasHorizontalOrVerticalMatch(row, col, randomColour)) {
+        randomColour = m_colourManager.getRandomColour();
+    }
+
+    return randomColour;
+}
+
+bool GameViewModel::hasHorizontalOrVerticalMatch(int row, int col, const Colour& colour) const {
+    if (col >= 2 && m_grid[row][col - 1].getColour() == colour && m_grid[row][col - 2].getColour() == colour) {
+        return true;
+    }
+
+    if (row >= 2 && m_grid[row - 1][col].getColour() == colour && m_grid[row - 2][col].getColour() == colour) {
+        return true;
+    }
+
+    return false;
+}
+
 
 void GameViewModel::resetGrid() {
     for (int row = 0; row < m_gridSize.first; ++row) {
@@ -188,14 +204,18 @@ bool GameViewModel::removeMatches() {
         }
     }
 
+    int scoreToAdd = 0;
     // Set the color of matched jewels to Unknown
     for (Jewel *jewel : jewelsToRemove) {
         jewel->setColour(Colour::Unknown);
-        m_score++;
+        scoreToAdd++;
     }
+    m_score += scoreToAdd;
+    addTime(scoreToAdd);
 
     if (!jewelsToRemove.empty()) {
         m_swapped = std::make_pair(getInvalidPair(), getInvalidPair());
+        m_highlighted = getInvalidPair();
         return true;
     }
     return false;
