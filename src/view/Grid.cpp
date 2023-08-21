@@ -3,13 +3,12 @@
 #include "../common/SDLUtils.hpp"
 
 Grid::Grid(SDL_Renderer** renderer, GameViewModel& viewModel)
-    : m_renderer(renderer), m_viewModel(viewModel), m_gridTexture(nullptr), m_dragging(false), m_dragJewelTexture(nullptr), m_explosionTexture(nullptr) {
+    : m_renderer(renderer), m_viewModel(viewModel), m_gridTexture(nullptr), m_dragging(false), m_dragJewelTexture(nullptr) {
 }
 
 Grid::~Grid() {
     SDLUtils::destroy(m_gridTexture);
     SDLUtils::destroy(m_dragJewelTexture);
-    SDLUtils::destroy(m_explosionTexture);
 
     clearTextureCache();
 }
@@ -61,20 +60,6 @@ void Grid::render() {
             SDL_RenderCopy(*m_renderer, m_dragJewelTexture, nullptr, &destRect);
         }
     }
-
-    // Render the explosion texture over the matching jewels
-    if (m_explosionTexture) {
-        for (int row = 0; row < m_viewModel.getNumRows(); ++row) {
-            for (int col = 0; col < m_viewModel.getNumCols(); ++col) {
-                if (m_viewModel.isColourUnknown(row, col)) {
-                    int destX = col * Constants::JEWEL_SIZE;
-                    int destY = row * Constants::JEWEL_SIZE;
-                    SDL_Rect destRect = {destX, destY, Constants::JEWEL_SIZE, Constants::JEWEL_SIZE};
-                    SDL_RenderCopy(*m_renderer, m_explosionTexture, nullptr, &destRect);
-                }
-            }
-        }
-    }
 }
 
 void Grid::createGridTexture() {
@@ -88,8 +73,7 @@ void Grid::createGridTexture() {
 
     SDL_SetRenderTarget(*m_renderer, m_gridTexture);
     SDL_SetRenderDrawColor(*m_renderer, 0, 0, 0, 0);
-    SDL_RenderClear(
-*m_renderer);
+    SDL_RenderClear(*m_renderer);
 
     for (int row = 0; row < m_viewModel.getNumRows(); ++row) {
         for (int col = 0; col < m_viewModel.getNumCols(); ++col) {
@@ -163,11 +147,6 @@ void Grid::handleMouseRelease(int x, int y) {
 
             LOG_F(INFO, "Grid texture release reset.");
         }
-
-        // if (m_viewModel.removeMatches()) {
-        //     // Load the explosion texture
-        //     // m_explosionTexture = getOrCreateTexture(*m_renderer, "assets/images/Explosion.png");
-        // }
 
         m_dragging = false;
         m_dragStartCol = -1;

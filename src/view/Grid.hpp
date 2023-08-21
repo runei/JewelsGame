@@ -38,7 +38,6 @@ private:
     int m_dragDestCol;
 
     SDL_Texture* m_dragJewelTexture;
-    SDL_Texture* m_explosionTexture;
 
 };
 
