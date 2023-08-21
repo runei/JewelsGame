@@ -27,6 +27,7 @@ public:
     bool removeMatches();
     bool collapseEmptySpaces();
     bool fillEmptySpacesWithRandomColors();
+    bool rollbackSwap();
     void reset();
     int getScore() const;
     int getTimeRemaining() const;
@@ -40,7 +41,7 @@ private:
 
     std::pair<int, int> m_highlighted;
     std::pair<int, int> m_gridSize;
-    std::pair<int, int> m_swapped;
+    std::pair<std::pair<int, int>, std::pair<int, int>> m_swapped;
 
     int m_score;
 

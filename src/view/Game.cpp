@@ -97,6 +97,8 @@ void Game::update() {
             m_grid.updateGrid();
         } else if (m_gameViewModel.removeMatches()) {
             m_grid.updateGrid();
+        } else if (m_gameViewModel.rollbackSwap()) {
+            m_grid.updateGrid();
         }
         resetTimer();
     }

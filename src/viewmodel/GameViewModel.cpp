@@ -3,7 +3,7 @@
 #include "../common/Constants.hpp"
 #include <random>
 
-GameViewModel::GameViewModel(int numRows, int numCols) : m_gridSize(numRows, numCols), m_grid(numRows, std::vector<Jewel>(numCols)), m_highlighted(INVALID, INVALID) {
+GameViewModel::GameViewModel(int numRows, int numCols) : m_gridSize(numRows, numCols), m_grid(numRows, std::vector<Jewel>(numCols)), m_highlighted(getInvalidPair()), m_swapped(getInvalidPair(), getInvalidPair()) {
 
 	fillGridRandomly();
 
@@ -84,6 +84,9 @@ bool GameViewModel::toggleJewelHighlight(int row, int col) {
 }
 
 void GameViewModel::swapJewels(const std::pair<int, int>& pos1, const std::pair<int, int>& pos2) {
+
+    m_swapped = std::make_pair(pos1, pos2);
+
     std::swap(m_grid[pos1.first][pos1.second], m_grid[pos2.first][pos2.second]);
 
     m_grid[pos1.first][pos1.second].setHighlighted(false);
@@ -191,7 +194,20 @@ bool GameViewModel::removeMatches() {
         m_score++;
     }
 
-    return !jewelsToRemove.empty();
+    if (!jewelsToRemove.empty()) {
+        m_swapped = std::make_pair(getInvalidPair(), getInvalidPair());
+        return true;
+    }
+    return false;
+}
+
+bool GameViewModel::rollbackSwap() {
+    if (!isPairInvalid(m_swapped.first)) {
+        swapJewels(m_swapped.first, m_swapped.second);
+        m_swapped = std::make_pair(getInvalidPair(), getInvalidPair());
+        return true;
+    }
+    return false;
 }
 
 bool GameViewModel::collapseEmptySpaces() {
