@@ -53,8 +53,8 @@ void Grid::render() {
 
     if (m_dragging) {
         if (m_dragJewelTexture) {
-            int destX = m_dragDestCol - Constants::JEWEL_SIZE / 2;
-            int destY = m_dragDestRow - Constants::JEWEL_SIZE / 2;
+            int destX = m_dragDest.first - Constants::JEWEL_SIZE / 2;
+            int destY = m_dragDest.second - Constants::JEWEL_SIZE / 2;
 
             SDL_Rect destRect = {destX, destY, Constants::JEWEL_SIZE, Constants::JEWEL_SIZE};
             SDL_RenderCopy(*m_renderer, m_dragJewelTexture, nullptr, &destRect);
@@ -109,13 +109,12 @@ void Grid::handleMouseClick(int x, int y) {
         if (m_viewModel.toggleJewelHighlight(row, col)) {
 
             m_dragging = true;
-            m_dragStartCol = col;
-            m_dragStartRow = row;
-            m_dragDestCol = col * Constants::JEWEL_SIZE + Constants::JEWEL_SIZE / 2;
-            m_dragDestRow = row * Constants::JEWEL_SIZE + Constants::JEWEL_SIZE / 2;
+            m_dragStart = std::make_pair(row, col);
+            m_dragDest.first = row * Constants::JEWEL_SIZE + Constants::JEWEL_SIZE / 2;
+            m_dragDest.second = col * Constants::JEWEL_SIZE + Constants::JEWEL_SIZE / 2;
 
             // Load the jewel texture for dragging
-            std::string imagePath = m_viewModel.getColourImgPath(m_dragStartRow, m_dragStartCol);
+            std::string imagePath = m_viewModel.getColourImgPath(m_dragStart.first, m_dragStart.second);
             m_dragJewelTexture = getOrCreateTexture(imagePath);
 
             updateGrid();
@@ -128,20 +127,19 @@ void Grid::handleMouseClick(int x, int y) {
 void Grid::handleMouseMotion(int x, int y) {
     if (m_dragging) {
         // Update destination position during drag movement
-        m_dragDestCol = x;
-        m_dragDestRow = y;
+        m_dragDest = std::make_pair(x, y);
     }
 }
 
 void Grid::handleMouseRelease(int x, int y) {
     if (m_dragging) {
 
-        int col = x / Constants::JEWEL_SIZE;
-        int row = y / Constants::JEWEL_SIZE;
+        const int col = x / Constants::JEWEL_SIZE;
+        const int row = y / Constants::JEWEL_SIZE;
 
-        if ((row == m_dragStartRow && abs(col - m_dragStartCol) == 1) || (col == m_dragStartCol && abs(row - m_dragStartRow) == 1)) {
+        if ((row == m_dragStart.first && abs(col - m_dragStart.second) == 1) || (col == m_dragStart.second && abs(row - m_dragStart.first) == 1)) {
 
-            m_viewModel.swapJewels(row, col, m_dragStartRow, m_dragStartCol);
+            m_viewModel.swapJewels(std::make_pair(row, col), m_dragStart);
 
             m_gridTexture = nullptr;
 
@@ -149,10 +147,8 @@ void Grid::handleMouseRelease(int x, int y) {
         }
 
         m_dragging = false;
-        m_dragStartCol = -1;
-        m_dragStartRow = -1;
-        m_dragDestCol = -1;
-        m_dragDestRow = -1;
+        m_dragStart = std::make_pair(-1, -1);
+        m_dragDest = std::make_pair(-1, -1);
 
         if (m_dragJewelTexture) {
             m_dragJewelTexture = nullptr;

@@ -8,6 +8,7 @@
 #include "SDL2/SDL_image.h"
 
 #include <unordered_map>
+#include <utility>
 
 class Grid {
 public:
@@ -32,10 +33,8 @@ private:
     std::unordered_map<std::string, SDL_Texture*> m_textureCache;
 
     bool m_dragging;
-    int m_dragStartRow;
-    int m_dragStartCol;
-    int m_dragDestRow;
-    int m_dragDestCol;
+    std::pair<int, int> m_dragStart;
+    std::pair<int, int> m_dragDest;
 
     SDL_Texture* m_dragJewelTexture;
 

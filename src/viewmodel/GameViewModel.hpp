@@ -6,6 +6,7 @@
 #include "../common/ColourManager.hpp"
 #include <vector>
 #include <string>
+#include <utility>
 
 //This class will manage the game state and provide an interface for the view to access and update that state.
 class GameViewModel {
@@ -22,7 +23,7 @@ public:
     bool toggleJewelHighlight(int row, int col);
 
     // game functions
-    void swapJewels(int row1, int col1, int row2, int col2);
+    void swapJewels(const std::pair<int, int>& pos1, const std::pair<int, int>& pos2);
     bool removeMatches();
     bool collapseEmptySpaces();
     bool fillEmptySpacesWithRandomColors();
@@ -31,16 +32,15 @@ public:
     int getTimeRemaining() const;
 
 private:
-    int m_numRows;
-    int m_numCols;
     std::vector<std::vector<Jewel>> m_grid;
 
     ColourManager m_colourManager;
 
-    static constexpr int NOT_HIGHLIGHTED = -1;
+    static constexpr int INVALID = -1;
 
-    int m_highlightedRow;
-    int m_highlightedCol;
+    std::pair<int, int> m_highlighted;
+    std::pair<int, int> m_gridSize;
+    std::pair<int, int> m_swapped;
 
     int m_score;
 
@@ -48,6 +48,9 @@ private:
 
     Colour getJewelColour(int row, int col) const;
     void setJewelColour(int row, int col, Colour colour);
+
+    std::pair<int, int> getInvalidPair();
+    bool isPairInvalid(const std::pair<int, int>& pair);
 
     void fillGridRandomly();
     void resetGrid();
