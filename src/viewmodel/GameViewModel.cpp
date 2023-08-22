@@ -57,7 +57,7 @@ int GameViewModel::getTimeRemaining() const {
 }
 
 void GameViewModel::addTime(int scoreAdded) {
-    const double timeToAdd = (double) scoreAdded / 2.0;
+    const double timeToAdd = (double) scoreAdded / 3.0;
     m_timer.addTime(timeToAdd);
 }
 
@@ -144,7 +144,8 @@ void GameViewModel::resetGrid() {
 }
 
 void GameViewModel::resetTime() {
-    m_timer.start(5);
+    // m_timer.start(5);
+    m_timer.start(Constants::INITIAL_TIME);
 }
 
 void GameViewModel::resetScore() {
@@ -153,7 +154,7 @@ void GameViewModel::resetScore() {
 
 void GameViewModel::reset() {
     resetGrid();
-    // fillGridRandomly();
+    fillGridRandomly();
     resetTime();
     resetScore();
 }

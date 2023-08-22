@@ -2,11 +2,11 @@
 #include "../common/SDLUtils.hpp"
 #include "../external/loguru.hpp"
 
-Scoreboard::Scoreboard(SDL_Renderer** renderer, GameViewModel& gameViewModel) : m_renderer(renderer), m_gameViewModel(gameViewModel) {
+Scoreboard::Scoreboard(SDL_Renderer** renderer, GameViewModel& gameViewModel, Grid& grid) : m_renderer(renderer), m_gameViewModel(gameViewModel), m_grid(grid), m_newGameButton(m_renderer, "New Game", getXPos(1), getYPos(4), getWidth(2), getHeight(0.75)) {
 
-    m_newGameButton = Button(m_renderer, "New Game", getXPos(1), getYPos(4), getWidth(2), getHeight(0.75));
+
     m_newGameButton.setOnclickFunction([this]() {
-        m_gameViewModel.reset();
+        m_grid.resetGrid();
     });
 
 }
@@ -48,7 +48,6 @@ void Scoreboard::render() {
 void Scoreboard::handleMouseClick(const SDL_Event& event) {
 
     m_newGameButton.handleEvent(event);
-
 
 }
 

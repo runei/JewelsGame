@@ -2,11 +2,11 @@
 #include "../external/loguru.hpp"
 #include "../common/SDLUtils.hpp"
 
-Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_window(nullptr), m_renderer(nullptr), m_backgroundTexture(nullptr), m_grid(&m_renderer, m_gameViewModel), m_scoreboard(&m_renderer, m_gameViewModel), m_newGameButton(&m_renderer, "New Game"), m_exitButton(&m_renderer, "Exit") {
+Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_window(nullptr), m_renderer(nullptr), m_backgroundTexture(nullptr), m_grid(&m_renderer, m_gameViewModel), m_scoreboard(&m_renderer, m_gameViewModel, m_grid), m_newGameButton(&m_renderer, "New Game"), m_exitButton(&m_renderer, "Exit") {
 
 
     m_newGameButton.setOnclickFunction([this]() {
-        m_gameViewModel.reset();
+        m_grid.resetGrid();
     });
 
     m_exitButton.setOnclickFunction([this]() {

@@ -4,6 +4,7 @@
 #include "../viewmodel/GameViewModel.hpp"
 #include "../common/Constants.hpp"
 #include "../components/Button.hpp"
+#include "Grid.hpp"
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
@@ -11,7 +12,7 @@
 
 class Scoreboard {
 public:
-    Scoreboard(SDL_Renderer** renderer, GameViewModel& gameViewModel);
+    Scoreboard(SDL_Renderer** renderer, GameViewModel& gameViewModel, Grid& grid);
 	~Scoreboard();
 
 
@@ -24,6 +25,7 @@ public:
 private:
     SDL_Renderer** m_renderer;
     GameViewModel& m_gameViewModel;
+    Grid& m_grid;
 
     Button m_newGameButton;
 

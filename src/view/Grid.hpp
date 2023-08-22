@@ -21,6 +21,7 @@ public:
     void handleMouseRelease(int x, int y);
     void clearTextureCache();
     void updateGrid();
+    void resetGrid();
 
 private:
     SDL_Texture* getOrCreateTexture(const std::string& imagePath);

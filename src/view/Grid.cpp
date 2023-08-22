@@ -169,3 +169,8 @@ void Grid::clearTextureCache() {
 void Grid::updateGrid() {
     m_gridTexture = nullptr;
 }
+
+void Grid::resetGrid() {
+    m_viewModel.reset();
+    updateGrid();
+}
