@@ -1,12 +1,18 @@
 #include "Button.hpp"
 #include "../common/SDLUtils.hpp"
 
+#include "../external/loguru.hpp"
+
 Button::Button(SDL_Renderer** renderer, const char* buttonText, int x, int y, int width, int height)
     : m_renderer(renderer), m_x(x), m_y(y), m_height(height), m_width(width), m_text(buttonText) {
 
     m_rect = {x, y, width, height};
 }
 
+Button::Button(SDL_Renderer** renderer, const char* buttonText)
+    : m_renderer(renderer), m_text(buttonText) {
+
+    }
 
 Button::Button() {}
 
@@ -39,4 +45,13 @@ bool Button::handleEvent(const SDL_Event& event) {
 
 void Button::setOnclickFunction(std::function<void()> callback) {
     m_onclickCallback = callback;
+}
+
+void Button::setPositionAndSize(int x, int y, int width, int height) {
+    m_x = x;
+    m_y = y;
+    m_height = height;
+    m_width = width;
+
+    m_rect = {x, y, width, height};
 }

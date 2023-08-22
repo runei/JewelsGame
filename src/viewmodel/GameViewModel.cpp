@@ -131,6 +131,9 @@ bool GameViewModel::hasHorizontalOrVerticalMatch(int row, int col, const Colour&
     return false;
 }
 
+bool GameViewModel::isGameOver() const {
+    return m_timer.getTimeRemaining() <= 0.0;
+}
 
 void GameViewModel::resetGrid() {
     for (int row = 0; row < m_gridSize.first; ++row) {
@@ -141,7 +144,7 @@ void GameViewModel::resetGrid() {
 }
 
 void GameViewModel::resetTime() {
-    m_timer.start(Constants::INITIAL_TIME);
+    m_timer.start(5);
 }
 
 void GameViewModel::resetScore() {

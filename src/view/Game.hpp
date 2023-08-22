@@ -5,6 +5,7 @@
 #include "SDL2/SDL_image.h"
 #include "../viewmodel/GameViewModel.hpp"
 #include "../common/Constants.hpp"
+#include "../components/Button.hpp"
 #include "Grid.hpp"
 #include "Scoreboard.hpp"
 
@@ -23,6 +24,7 @@ public:
 
     // Render the game
     void render();
+    void renderEndgameScreen();
 
     // Clean up resources
     void cleanup();
@@ -40,6 +42,9 @@ private:
     GameViewModel m_gameViewModel;
     Grid m_grid;
     Scoreboard m_scoreboard;
+
+    Button m_newGameButton;
+    Button m_exitButton;
 
     bool m_isRunning;
     int m_collapseTimer;

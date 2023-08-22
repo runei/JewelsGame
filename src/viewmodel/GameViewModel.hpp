@@ -31,6 +31,7 @@ public:
     void reset();
     int getScore() const;
     int getTimeRemaining() const;
+    bool isGameOver() const;
 
 private:
     std::vector<std::vector<Jewel>> m_grid;
