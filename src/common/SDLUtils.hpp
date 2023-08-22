@@ -4,27 +4,35 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
-#include "SDLException.hpp"
+#include "../common/Constants.hpp"
 #include <string>
+#include "SDLException.hpp"
 
 namespace SDLUtils {
 
-	void initializeSDL() noexcept(false);
+// Initialize the SDL library.
+// throws SDLException if SDL initialization fails.
+void initializeSDL();
 
-	SDL_Window* createWindow(const char* title, const int width, const int height) noexcept(false);
+// Create an SDL window.
+SDL_Window* createWindow(const char* title, const int width, const int height);
 
-	SDL_Renderer* createRenderer(SDL_Window* window) noexcept(false);
+// Create an SDL renderer for a given window.
+SDL_Renderer* createRenderer(SDL_Window* window);
 
-	SDL_Texture* loadImage(SDL_Renderer* renderer, const std::string& imagePath) noexcept(false);
+// Load an image into an SDL texture.
+SDL_Texture* loadImage(SDL_Renderer* renderer, const std::string& imagePath);
 
-	const char* getFontPath();
+// Get the path to the font file.
+const char* getFontPath();
 
-	SDL_Texture* createButtonTexture(SDL_Renderer* renderer, const std::string& buttonText, int x, int y, int width, int height);
+// Create an SDL texture for a button with text.
+SDL_Texture* createButtonTexture(SDL_Renderer* renderer, const std::string& buttonText, int x, int y, int width, int height);
 
-	void destroy(SDL_Texture* texture);
-	void destroy(SDL_Renderer* renderer);
-	void destroy(SDL_Window* window);
+void destroy(SDL_Texture* texture);
+void destroy(SDL_Renderer* renderer);
+void destroy(SDL_Window* window);
 
-}
+} // namespace SDLUtils
 
 #endif // SDL_UTILS_HPP

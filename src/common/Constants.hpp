@@ -25,6 +25,9 @@ namespace Constants {
     constexpr int INITIAL_SCORE = 0;
     constexpr int INITIAL_TIME = 60;
 
+    // Layout related
+    constexpr int BUTTON_FONT_SIZE = 22;
+
 } // namespace GameConstants
 
 #endif // CONSTANTS_HPP
