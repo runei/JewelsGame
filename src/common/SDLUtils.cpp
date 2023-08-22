@@ -51,7 +51,7 @@ SDL_Texture* SDLUtils::loadImage(SDL_Renderer* renderer, const std::string& imag
 
 const char* SDLUtils::getFontPath() {
 
-    return "assets/fonts/OldLondon.ttf";
+    return "assets/fonts/Seagram.ttf";
 }
 
 SDL_Texture* SDLUtils::createButtonTexture(SDL_Renderer* renderer, const std::string& buttonText, int x, int y, int width, int height) {
@@ -60,11 +60,11 @@ SDL_Texture* SDLUtils::createButtonTexture(SDL_Renderer* renderer, const std::st
 
     // Create a surface with grey background
     SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
-    SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 100, 100, 100, 255)); // Grey color
+    SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, 200, 200, 200, 255)); // Grey color
 
     // Create a font and render the button text
-    TTF_Font* font = TTF_OpenFont(getFontPath(), 28);
-    SDL_Color textColor = {255, 255, 255, 255};
+    TTF_Font* font = TTF_OpenFont(getFontPath(), 22);
+    SDL_Color textColor = {139, 0, 0, 255};
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, buttonText.c_str(), textColor);
 
     // Calculate text position to center it on the button

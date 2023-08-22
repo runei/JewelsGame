@@ -142,8 +142,19 @@ void Game::renderEndgameScreen() {
     // Clear the renderer
     SDL_RenderClear(m_renderer);
 
+    // Load the background image
+    SDL_Texture* backgroundTexture = SDLUtils::loadImage(m_renderer, "assets/images/background.jpg");
+    if (!backgroundTexture) {
+        LOG_F(ERROR, "Error loading background image: %s", SDL_GetError());
+        return;
+    }
+
+    // Render the background image
+    SDL_Rect destRect = {0, 0, Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT};
+    SDL_RenderCopy(m_renderer, backgroundTexture, nullptr, &destRect);
+
     // Render the endgame screen UI
-    SDL_Color textColor = {255, 255, 255}; // White text color
+    SDL_Color textColor = {139, 0, 0};
     TTF_Font* font = TTF_OpenFont(SDLUtils::getFontPath(), 36);
 
     SDL_Surface* gameOverSurface = TTF_RenderText_Solid(font, "Game Over", textColor);
@@ -153,7 +164,7 @@ void Game::renderEndgameScreen() {
     int gameOverWidth = gameOverSurface->w;
     int gameOverHeight = gameOverSurface->h;
     int gameOverX = (Constants::SCREEN_WIDTH - gameOverWidth) / 2;
-    int gameOverY = (Constants::SCREEN_HEIGHT - gameOverHeight) / 2 - 50;
+    int gameOverY = (Constants::SCREEN_HEIGHT - gameOverHeight) / 2 - 100;
 
     // Render "Game Over" text
     SDL_Rect gameOverRect = {gameOverX, gameOverY, gameOverWidth, gameOverHeight};
@@ -173,7 +184,6 @@ void Game::renderEndgameScreen() {
     SDL_Rect scoreRect = {scoreX, scoreY, scoreWidth, scoreHeight};
     SDL_RenderCopy(m_renderer, scoreTexture, nullptr, &scoreRect);
 
-
     // Create and render "New Game" button
     m_newGameButton.setPositionAndSize(scoreX, scoreY + scoreHeight + 20, scoreWidth, 50);
     m_newGameButton.render();
@@ -182,7 +192,6 @@ void Game::renderEndgameScreen() {
     m_exitButton.setPositionAndSize(scoreX, scoreY + scoreHeight + 80, scoreWidth, 50);
     m_exitButton.render();
 
-
     // Clean up surfaces and textures
     SDL_FreeSurface(gameOverSurface);
     SDL_FreeSurface(scoreSurface);
@@ -190,9 +199,13 @@ void Game::renderEndgameScreen() {
     SDL_DestroyTexture(scoreTexture);
     TTF_CloseFont(font);
 
+    // Clean up background texture
+    SDL_DestroyTexture(backgroundTexture);
+
     // Update the screen
     SDL_RenderPresent(m_renderer);
 }
+
 
 void Game::cleanup() {
 

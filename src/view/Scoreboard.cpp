@@ -35,10 +35,10 @@ void Scoreboard::render() {
 
 	renderBackground();
 
-	write("SCORE:", 1, 0.4);
+	write("SCORE", 1, 0.4);
     writeScore(1.05, 1.1);
 
-    write("TIME:", 1, 2.4);
+    write("TIME", 1, 2.4);
     write(std::to_string(m_gameViewModel.getTimeRemaining()), 1.75, 3.1);
 
     m_newGameButton.render();
@@ -59,7 +59,7 @@ void Scoreboard::write(const std::string& text, const double xpos, const double 
 	// Draw the "SCORE" text
     SDL_Color textColor = {255, 255, 255, 255}; // White color with full opacity
 
-    TTF_Font* font = TTF_OpenFont(SDLUtils::getFontPath(), 36);
+    TTF_Font* font = TTF_OpenFont(SDLUtils::getFontPath(), 30);
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(*m_renderer, textSurface);
 
@@ -109,7 +109,7 @@ void Scoreboard::renderBackground() {
     SDL_RenderCopy(*m_renderer, backgroundTexture, nullptr, &destRect);
 
     // Draw the semi-transparent red rectangle
-    SDL_SetRenderDrawColor(*m_renderer, 255, 0, 0, 30);
+    SDL_SetRenderDrawColor(*m_renderer, 255, 0, 0, 60);
     SDL_Rect rect = {getXPos(0), getYPos(0), getWidth(4), Constants::SCREEN_HEIGHT};
     SDL_RenderFillRect(*m_renderer, &rect);
 
