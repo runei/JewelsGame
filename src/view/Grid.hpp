@@ -1,4 +1,3 @@
-
 #ifndef GRID_HPP
 #define GRID_HPP
 
@@ -15,17 +14,33 @@ public:
     Grid(SDL_Renderer** renderer, GameViewModel& viewModel);
     ~Grid();
 
+    // Rendering and interaction methods
     void render();
     void handleMouseClick(int x, int y);
     void handleMouseMotion(int x, int y);
     void handleMouseRelease(int x, int y);
-    void clearTextureCache();
     void updateGrid();
     void resetGrid();
 
 private:
+    // Texture management methods
     SDL_Texture* getOrCreateTexture(const std::string& imagePath);
+    void clearTextureCache();
+
+    // Grid rendering methods
     void createGridTexture();
+    void renderJewel(int x, int y, SDL_Texture* jewelTexture);
+    void renderHighlight(int x, int y);
+    void renderJewelWithHighlight(int row, int col);
+    void renderJewelsWithHighlights();
+    void renderDraggingJewel();
+
+    // Dragging logic methods
+    void resetDragState();
+    bool isAdjacentToStart(int row, int col) const;
+    void setupDragJewelTexture(int row, int col);
+    void initializeDragging(int row, int col);
+    bool isValidGridPosition(int row, int col) const;
 
     GameViewModel& m_viewModel;
 
@@ -42,4 +57,3 @@ private:
 };
 
 #endif // GRID_HPP
-
