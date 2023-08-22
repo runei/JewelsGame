@@ -1,28 +1,35 @@
 #include "Timer.hpp"
 
-Timer::Timer() : m_duration(0.0) {}
+// Constructor
+Timer::Timer() : m_duration(0.0), m_startTime(Clock::now()) {}
 
+// Start the timer with a specified duration
 void Timer::start(double duration) {
-    m_startTime = std::chrono::high_resolution_clock::now();
+    m_startTime = Clock::now();
     m_duration = duration;
 }
 
+// Check if the timer is still running
 bool Timer::isRunning() const {
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = currentTime - m_startTime;
-    return elapsed.count() < m_duration;
+    return calculateElapsedTime() < m_duration;
 }
 
+// Get the remaining time on the timer
 double Timer::getTimeRemaining() const {
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = currentTime - m_startTime;
-    return m_duration - elapsed.count();
+    return m_duration - calculateElapsedTime();
 }
 
+// Add time to the current timer duration
 void Timer::addTime(double duration) {
     m_duration += duration;
 }
 
+// Stop the timer
 void Timer::stop() {
     m_duration = 0.0;
+}
+
+// Calculate the elapsed time since start
+double Timer::calculateElapsedTime() const {
+    return std::chrono::duration<double>(Clock::now() - m_startTime).count();
 }
