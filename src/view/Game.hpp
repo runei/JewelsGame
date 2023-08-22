@@ -52,9 +52,15 @@ private:
     // Initialization functions
     void initializeImages();
 
-    bool initializeResources();
     void resetTimer();
     void updateCollapseAndFill(const Uint32 deltaTime);
+
+    void handleQuitEvent();
+    void handleMouseButtonDownEvent(const SDL_Event& event);
+    void handleMouseMotionEvent(const SDL_Event& event);
+    void handleMouseButtonUpEvent(const SDL_Event& event);
+    void handleGameOverEvent(const SDL_Event& event);
+
 };
 
 #endif // GAME_HPP

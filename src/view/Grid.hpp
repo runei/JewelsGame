@@ -21,11 +21,11 @@ public:
     void handleMouseRelease(int x, int y);
     void updateGrid();
     void resetGrid();
+    void clearTextureCache();
 
 private:
     // Texture management methods
     SDL_Texture* getOrCreateTexture(const std::string& imagePath);
-    void clearTextureCache();
 
     // Grid rendering methods
     void createGridTexture();

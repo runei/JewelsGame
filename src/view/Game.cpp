@@ -4,7 +4,7 @@
 
 Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_window(nullptr), m_renderer(nullptr), m_grid(&m_renderer, m_gameViewModel), m_scoreboard(&m_renderer, m_gameViewModel, m_grid), m_newGameButton(&m_renderer, "New Game"), m_exitButton(&m_renderer, "Exit") {
 
-
+    // Set onClick functions for buttons
     m_newGameButton.setOnclickFunction([this]() {
         m_grid.resetGrid();
     });
@@ -18,112 +18,118 @@ Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constan
 
 Game::~Game() {
     m_grid.clearTextureCache();
-
     cleanup();
 }
 
 bool Game::initialize(const char* title, const int width, const int height) {
-
     try {
-
+        // Initialize SDL
         SDLUtils::initializeSDL();
 
+        // Create window and renderer
         m_window = SDLUtils::createWindow(title, width, height);
-
         m_renderer = SDLUtils::createRenderer(m_window);
 
-    } catch (const SDLException& e) {
+        // Initialize frame time and game state
+        m_prevFrameTime = SDL_GetTicks();
+        m_isRunning = true;
 
+        LOG_F(INFO, "Game initialized successfully.");
+        return true;
+
+    } catch (const SDLException& e) {
         LOG_F(ERROR, "%s: %s", e.what(), e.getSdlError());
         return false;
-
     }
-
-    m_prevFrameTime = SDL_GetTicks();
-    m_isRunning = true;
-
-    LOG_F(INFO, "Game initialized successfully.");
-    return true;
-}
-
-bool Game::initializeResources() {
-    LOG_F(INFO, "Initializing resources...");
-
-
-    LOG_F(INFO, "Resources initialized successfully.");
-    return true;
 }
 
 void Game::handleEvents() {
-
-
     SDL_Event event;
     SDL_PollEvent(&event);
 
-
-    if (event.type == SDL_QUIT) {
-        m_isRunning = false;
-        return;
-    }
-
-
-    if (m_gameViewModel.isGameOver()) {
-        m_newGameButton.handleEvent(event);
-        m_exitButton.handleEvent(event);
-        return;
-    }
-
+    // Handle various events based on event type
     switch (event.type) {
+        case SDL_QUIT:
+            handleQuitEvent();
+            break;
+
         case SDL_MOUSEBUTTONDOWN:
-            if (event.button.button == SDL_BUTTON_LEFT) {
-                m_grid.handleMouseClick(event.button.x, event.button.y);
-                m_scoreboard.handleMouseClick(event);
-            }
+            handleMouseButtonDownEvent(event);
             break;
 
         case SDL_MOUSEMOTION:
-            m_grid.handleMouseMotion(event.motion.x, event.motion.y);
+            handleMouseMotionEvent(event);
             break;
 
         case SDL_MOUSEBUTTONUP:
-            if (event.button.button == SDL_BUTTON_LEFT) {
-                m_grid.handleMouseRelease(event.button.x, event.button.y);
-            }
+            handleMouseButtonUpEvent(event);
             break;
 
         default:
             break;
     }
+
+    // Handle game over event for buttons
+    if (m_gameViewModel.isGameOver()) {
+        handleGameOverEvent(event);
+    }
 }
+
+void Game::handleQuitEvent() {
+    m_isRunning = false;
+}
+
+void Game::handleMouseButtonDownEvent(const SDL_Event& event) {
+    if (event.button.button == SDL_BUTTON_LEFT) {
+        m_grid.handleMouseClick(event.button.x, event.button.y);
+        m_scoreboard.handleMouseClick(event);
+    }
+}
+
+void Game::handleMouseMotionEvent(const SDL_Event& event) {
+    m_grid.handleMouseMotion(event.motion.x, event.motion.y);
+}
+
+void Game::handleMouseButtonUpEvent(const SDL_Event& event) {
+    if (event.button.button == SDL_BUTTON_LEFT) {
+        m_grid.handleMouseRelease(event.button.x, event.button.y);
+    }
+}
+
+void Game::handleGameOverEvent(const SDL_Event& event) {
+    m_newGameButton.handleEvent(event);
+    m_exitButton.handleEvent(event);
+}
+
 
 void Game::resetTimer(){
     m_collapseTimer = 100;// Constants::TIME_PER_FRAME;
 }
 
 void Game::update() {
-
     Uint32 currentTime = SDL_GetTicks();
     Uint32 deltaTime = currentTime - m_prevFrameTime;
 
+    // Update the collapse timer
     m_collapseTimer -= deltaTime;
 
+    // If it's time to perform grid operations
     if (m_collapseTimer <= 0) {
+        if (m_gameViewModel.fillEmptySpacesWithRandomColors() || m_gameViewModel.collapseEmptySpaces() ||
+            m_gameViewModel.removeMatches() ||
+            m_gameViewModel.rollbackSwap()) {
 
-        if (m_gameViewModel.fillEmptySpacesWithRandomColors()) {
-            m_grid.updateGrid();
-        } else if (m_gameViewModel.collapseEmptySpaces()) {
-            m_grid.updateGrid();
-        } else if (m_gameViewModel.removeMatches()) {
-            m_grid.updateGrid();
-        } else if (m_gameViewModel.rollbackSwap()) {
             m_grid.updateGrid();
         }
+
+        // Reset the timer for the next cycle
         resetTimer();
     }
 
+    // Update the previous frame time
     m_prevFrameTime = currentTime;
-
 }
+
 
 void Game::render() {
     SDL_RenderClear(m_renderer);
