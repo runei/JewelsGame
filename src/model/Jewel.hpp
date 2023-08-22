@@ -5,15 +5,19 @@
 
 class Jewel {
 public:
+    // Default constructor
     Jewel();
-    explicit Jewel(Colour colour);
 
+    // Constructor with colour assignment
+    Jewel(Colour colour);
+
+    // Getter and setter for colour
     Colour getColour() const;
     void setColour(Colour colour);
 
+    // Getter and setter for highlighting
     bool isHighlighted() const;
     void setHighlighted(bool highlighted);
-
 
 private:
     Colour m_colour;
