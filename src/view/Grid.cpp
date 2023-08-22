@@ -63,18 +63,35 @@ void Grid::render() {
 }
 
 void Grid::createGridTexture() {
-    m_gridTexture = SDL_CreateTexture(*m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_viewModel.getNumCols() * Constants::JEWEL_SIZE, m_viewModel.getNumRows() * Constants::JEWEL_SIZE);
-
-
-    if (!m_gridTexture) {
-        LOG_F(ERROR, "Error creating grid texture: %s", SDL_GetError());
+    // Load the background image
+    SDL_Texture* backgroundTexture = SDLUtils::loadImage(*m_renderer, "assets/images/background.jpg");
+    if (!backgroundTexture) {
+        LOG_F(ERROR, "Error loading background image: %s", SDL_GetError());
         return;
     }
 
+    int imageWidth = m_viewModel.getNumCols() * Constants::JEWEL_SIZE;
+    int imageHeight = m_viewModel.getNumRows() * Constants::JEWEL_SIZE;
+
+    // Create the grid texture
+    m_gridTexture = SDL_CreateTexture(*m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, imageWidth, imageHeight);
+    if (!m_gridTexture) {
+        LOG_F(ERROR, "Error creating grid texture: %s", SDL_GetError());
+        SDL_DestroyTexture(backgroundTexture);
+        return;
+    }
+
+    // Set the render target to the grid texture
     SDL_SetRenderTarget(*m_renderer, m_gridTexture);
+
+    // Clear the grid texture with a transparent color (0 alpha)
     SDL_SetRenderDrawColor(*m_renderer, 0, 0, 0, 0);
     SDL_RenderClear(*m_renderer);
 
+    // Render the background image onto the grid texture
+    SDL_RenderCopy(*m_renderer, backgroundTexture, nullptr, nullptr);
+
+    // Render jewels on top of the background
     for (int row = 0; row < m_viewModel.getNumRows(); ++row) {
         for (int col = 0; col < m_viewModel.getNumCols(); ++col) {
             std::string imagePath = m_viewModel.getColourImgPath(row, col);
@@ -98,8 +115,11 @@ void Grid::createGridTexture() {
         }
     }
 
+    // Reset render target and clean up resources
     SDL_SetRenderTarget(*m_renderer, nullptr);
+    SDL_DestroyTexture(backgroundTexture);
 }
+
 
 void Grid::handleMouseClick(int x, int y) {
     int row = y / Constants::JEWEL_SIZE;

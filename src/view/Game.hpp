@@ -37,7 +37,6 @@ private:
 
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
-    SDL_Texture* m_backgroundTexture;
 
     GameViewModel m_gameViewModel;
     Grid m_grid;
@@ -52,10 +51,7 @@ private:
 
     // Initialization functions
     void initializeImages();
-    void renderBackground();
 
-    // Calculate and wait for the remaining time to achieve desired frame rate
-    void delayIfNeeded();
     bool initializeResources();
     void resetTimer();
     void updateCollapseAndFill(const Uint32 deltaTime);

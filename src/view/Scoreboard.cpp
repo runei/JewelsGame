@@ -94,28 +94,38 @@ void Scoreboard::writeScore(const double xpos, const double ypos) {
 }
 
 void Scoreboard::renderBackground() {
+    // Load the background image
+    SDL_Texture* backgroundTexture = SDLUtils::loadImage(*m_renderer, "assets/images/scoreboard.jpg");
+    if (!backgroundTexture) {
+        LOG_F(ERROR, "Error loading background image: %s", SDL_GetError());
+        return;
+    }
 
-	// Set rendering blend mode for transparency
+    // Set rendering blend mode for transparency
     SDL_SetRenderDrawBlendMode(*m_renderer, SDL_BLENDMODE_BLEND);
 
+    // Render the background image
+    SDL_Rect destRect = {getXPos(0), getYPos(0), getWidth(4), Constants::SCREEN_HEIGHT};
+    SDL_RenderCopy(*m_renderer, backgroundTexture, nullptr, &destRect);
+
     // Draw the semi-transparent red rectangle
-    SDL_SetRenderDrawColor(*m_renderer, 255, 0, 0, 128);
+    SDL_SetRenderDrawColor(*m_renderer, 255, 0, 0, 30);
     SDL_Rect rect = {getXPos(0), getYPos(0), getWidth(4), Constants::SCREEN_HEIGHT};
     SDL_RenderFillRect(*m_renderer, &rect);
 
-
     SDL_SetRenderDrawBlendMode(*m_renderer, SDL_BLENDMODE_NONE);
-
 
     // Draw the score background black
     SDL_SetRenderDrawColor(*m_renderer, 0, 0, 0, 0);
-    SDL_Rect rect2 = {getXPos(1), getYPos(1), getWidth(2), getHeight(0.75) };
+    SDL_Rect rect2 = {getXPos(1), getYPos(1), getWidth(2), getHeight(0.75)};
     SDL_RenderFillRect(*m_renderer, &rect2);
-
 
     // Draw the time background black
     SDL_SetRenderDrawColor(*m_renderer, 0, 0, 0, 0);
-    SDL_Rect rect3 = {getXPos(1), getYPos(3), getWidth(2), getHeight(0.75) };
+    SDL_Rect rect3 = {getXPos(1), getYPos(3), getWidth(2), getHeight(0.75)};
     SDL_RenderFillRect(*m_renderer, &rect3);
 
+    // Clean up background texture
+    SDL_DestroyTexture(backgroundTexture);
 }
+

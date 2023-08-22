@@ -2,7 +2,7 @@
 #include "../external/loguru.hpp"
 #include "../common/SDLUtils.hpp"
 
-Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_window(nullptr), m_renderer(nullptr), m_backgroundTexture(nullptr), m_grid(&m_renderer, m_gameViewModel), m_scoreboard(&m_renderer, m_gameViewModel, m_grid), m_newGameButton(&m_renderer, "New Game"), m_exitButton(&m_renderer, "Exit") {
+Game::Game() : m_isRunning(false), m_gameViewModel(Constants::GRID_ROWS, Constants::GRID_COLS), m_window(nullptr), m_renderer(nullptr), m_grid(&m_renderer, m_gameViewModel), m_scoreboard(&m_renderer, m_gameViewModel, m_grid), m_newGameButton(&m_renderer, "New Game"), m_exitButton(&m_renderer, "Exit") {
 
 
     m_newGameButton.setOnclickFunction([this]() {
@@ -31,8 +31,6 @@ bool Game::initialize(const char* title, const int width, const int height) {
         m_window = SDLUtils::createWindow(title, width, height);
 
         m_renderer = SDLUtils::createRenderer(m_window);
-
-        m_backgroundTexture = SDLUtils::loadImage(m_renderer, "assets/images/Backdrop13.jpg");
 
     } catch (const SDLException& e) {
 
@@ -125,7 +123,6 @@ void Game::update() {
 
     m_prevFrameTime = currentTime;
 
-    // delayIfNeeded();
 }
 
 void Game::render() {
@@ -134,7 +131,6 @@ void Game::render() {
     if (m_gameViewModel.isGameOver()) {
         renderEndgameScreen();
     } else {
-        renderBackground();
         m_grid.render();
         m_scoreboard.render();
     }
@@ -200,7 +196,6 @@ void Game::renderEndgameScreen() {
 
 void Game::cleanup() {
 
-    SDLUtils::destroy(m_backgroundTexture);
     SDLUtils::destroy(m_renderer);
     SDLUtils::destroy(m_window);
 
@@ -213,20 +208,3 @@ bool Game::isRunning() {
     return m_isRunning;
 }
 
-void Game::renderBackground() {
-    if (m_backgroundTexture) {
-        SDL_RenderCopy(m_renderer, m_backgroundTexture, nullptr, nullptr);
-    }
-}
-
-void Game::delayIfNeeded() {
-    Uint32 currentTime = SDL_GetTicks();
-    Uint32 elapsedTime = currentTime - m_prevFrameTime;
-
-    if (elapsedTime < Constants::TIME_PER_FRAME) {
-        Uint32 delayTime = Constants::TIME_PER_FRAME - elapsedTime;
-        SDL_Delay(delayTime);
-    }
-
-    m_prevFrameTime = SDL_GetTicks();
-}
