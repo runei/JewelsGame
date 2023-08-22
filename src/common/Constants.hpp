@@ -24,6 +24,7 @@ namespace Constants {
     // Game-related constants
     constexpr int INITIAL_SCORE = 0;
     constexpr int INITIAL_TIME = 60;
+    constexpr int MATCH_THRESHOLD = 3;
 
     // Layout related
     constexpr int BUTTON_FONT_SIZE = 22;

@@ -61,20 +61,22 @@ void GameViewModel::addTime(int scoreAdded) {
     m_timer.addTime(timeToAdd);
 }
 
+// Interaction function to toggle jewel highlight
 bool GameViewModel::toggleJewelHighlight(int row, int col) {
     Jewel& jewel = m_grid[row][col];
-
 
     if (jewel.isHighlighted()) {
         LOG_F(INFO, "Unhighlighting jewel at row %d, col %d", row, col);
         jewel.setHighlighted(false);
         m_highlighted = getInvalidPair();
-        return true;
     } else {
         if (!isPairInvalid(m_highlighted)) {
-            if ((row == m_highlighted.first && abs(col - m_highlighted.second) == 1) ||
-                (col == m_highlighted.second && abs(row - m_highlighted.first) == 1)) {
-                LOG_F(INFO, "Swapping jewels at row %d, col %d with row %d, col %d", m_highlighted.first, m_highlighted.second, row, col);
+            int highlightedRow = m_highlighted.first;
+            int highlightedCol = m_highlighted.second;
+
+            if ((row == highlightedRow && abs(col - highlightedCol) == 1) ||
+                (col == highlightedCol && abs(row - highlightedRow) == 1)) {
+                LOG_F(INFO, "Swapping jewels at row %d, col %d with row %d, col %d", highlightedRow, highlightedCol, row, col);
                 swapJewels(m_highlighted, std::make_pair(row, col));
             }
         } else {
@@ -82,11 +84,11 @@ bool GameViewModel::toggleJewelHighlight(int row, int col) {
             jewel.setHighlighted(true);
             m_highlighted = std::make_pair(row, col);
         }
-        return true;
     }
 
-    return false;
+    return true;
 }
+
 
 void GameViewModel::swapJewels(const std::pair<int, int>& pos1, const std::pair<int, int>& pos2) {
 
@@ -110,41 +112,43 @@ void GameViewModel::fillGridRandomly() {
 }
 
 Colour GameViewModel::getRandomColorWithoutMatches(int row, int col) {
-    Colour randomColour = m_colourManager.getRandomColour();
+    Colour randomColour;
 
-    while (hasHorizontalOrVerticalMatch(row, col, randomColour)) {
+    do {
         randomColour = m_colourManager.getRandomColour();
-    }
+    } while (hasHorizontalOrVerticalMatch(row, col, randomColour));
 
     return randomColour;
 }
 
+
 bool GameViewModel::hasHorizontalOrVerticalMatch(int row, int col, const Colour& colour) const {
-    if (col >= 2 && m_grid[row][col - 1].getColour() == colour && m_grid[row][col - 2].getColour() == colour) {
+    if (col >= 2 && (m_grid[row][col - 1].getColour() == colour && m_grid[row][col - 2].getColour() == colour)) {
         return true;
     }
 
-    if (row >= 2 && m_grid[row - 1][col].getColour() == colour && m_grid[row - 2][col].getColour() == colour) {
+    if (row >= 2 && (m_grid[row - 1][col].getColour() == colour && m_grid[row - 2][col].getColour() == colour)) {
         return true;
     }
 
     return false;
 }
 
+
 bool GameViewModel::isGameOver() const {
     return m_timer.getTimeRemaining() <= 0.0;
 }
 
 void GameViewModel::resetGrid() {
-    for (int row = 0; row < m_gridSize.first; ++row) {
-        for (int col = 0; col < m_gridSize.second; ++col) {
-            m_grid[row][col].setColour(Colour::Unknown);
+    for (auto& row : m_grid) {
+        for (auto& jewel : row) {
+            jewel.setColour(Colour::Unknown);
         }
     }
 }
 
+
 void GameViewModel::resetTime() {
-    // m_timer.start(5);
     m_timer.start(Constants::INITIAL_TIME);
 }
 
@@ -160,60 +164,47 @@ void GameViewModel::reset() {
 }
 
 bool GameViewModel::removeMatches() {
-
-    // List to keep track of jewels to be removed
     std::vector<Jewel *> jewelsToRemove;
+    int scoreToAdd = 0;
 
-    // Check vertically
-    for (int col = 0; col < m_gridSize.second; ++col) {
-        int row = 0;
-        while (row < m_gridSize.first - 2) {
+    for (int row = 0; row < m_gridSize.first; ++row) {
+        for (int col = 0; col < m_gridSize.second; ++col) {
             Colour color = m_grid[row][col].getColour();
             if (color != Colour::Unknown) {
-                int matchCount = 1;
+                int verticalMatchCount = 1;
+                int horizontalMatchCount = 1;
+
+                // Check for vertical match
                 for (int i = 1; row + i < m_gridSize.first && m_grid[row + i][col].getColour() == color; ++i) {
-                    ++matchCount;
+                    ++verticalMatchCount;
                 }
-                if (matchCount >= 3) {
-                    for (int i = 0; i < matchCount; ++i) {
+
+                // Check for horizontal match
+                for (int i = 1; col + i < m_gridSize.second && m_grid[row][col + i].getColour() == color; ++i) {
+                    ++horizontalMatchCount;
+                }
+
+                if (verticalMatchCount >= 3) {
+                    for (int i = 0; i < verticalMatchCount; ++i) {
                         jewelsToRemove.push_back(&m_grid[row + i][col]);
                     }
                 }
-                row += matchCount;
-            } else {
-                ++row;
-            }
-        }
-    }
 
-    // Check horizontally
-    for (int row = 0; row < m_gridSize.first; ++row) {
-        int col = 0;
-        while (col < m_gridSize.second - 2) {
-            Colour color = m_grid[row][col].getColour();
-            if (color != Colour::Unknown) {
-                int matchCount = 1;
-                for (int i = 1; col + i < m_gridSize.second && m_grid[row][col + i].getColour() == color; ++i) {
-                    ++matchCount;
-                }
-                if (matchCount >= 3) {
-                    for (int i = 0; i < matchCount; ++i) {
+                if (horizontalMatchCount >= 3) {
+                    for (int i = 0; i < horizontalMatchCount; ++i) {
                         jewelsToRemove.push_back(&m_grid[row][col + i]);
                     }
                 }
-                col += matchCount;
-            } else {
-                ++col;
             }
         }
     }
 
-    int scoreToAdd = 0;
     // Set the color of matched jewels to Unknown
     for (Jewel *jewel : jewelsToRemove) {
         jewel->setColour(Colour::Unknown);
         scoreToAdd++;
     }
+
     m_score += scoreToAdd;
     addTime(scoreToAdd);
 
@@ -224,6 +215,7 @@ bool GameViewModel::removeMatches() {
     }
     return false;
 }
+
 
 bool GameViewModel::rollbackSwap() {
     if (!isPairInvalid(m_swapped.first)) {
@@ -238,15 +230,14 @@ bool GameViewModel::collapseEmptySpaces() {
     bool anySwap = false;
 
     for (int col = 0; col < m_gridSize.second; ++col) {
-       for (int row = m_gridSize.first - 1; row >= 0; --row) {
+        for (int row = m_gridSize.first - 1; row >= 0; --row) {
             Colour color = m_grid[row][col].getColour();
+
             if (color == Colour::Unknown) {
-                int swapRow = row - 1;
-                while (swapRow >= 0 && m_grid[swapRow][col].getColour() == Colour::Unknown) {
-                    --swapRow;
-                }
-                if (swapRow >= 0) {
-                    std::swap(m_grid[swapRow+1][col], m_grid[swapRow][col]);
+                int targetRow = findNextNonEmptyRow(row, col);
+
+                if (targetRow != -1) {
+                    std::swap(m_grid[targetRow][col], m_grid[row][col]);
                     anySwap = true;
                 }
             }
@@ -256,14 +247,24 @@ bool GameViewModel::collapseEmptySpaces() {
     return anySwap;
 }
 
+int GameViewModel::findNextNonEmptyRow(int currentRow, int col) const {
+    int row = currentRow - 1;
+
+    while (row >= 0 && m_grid[row][col].getColour() == Colour::Unknown) {
+        --row;
+    }
+
+    return row;
+}
+
 bool GameViewModel::fillEmptySpacesWithRandomColors() {
     bool wasFilled = false;
-    const int row = 0;
+    const int targetRow = 0;
 
-    for (int col = 0; col < m_gridSize.second; ++col) {
-        if (getJewelColour(row, col) == Colour::Unknown) {
+    for (int targetCol = 0; targetCol < m_gridSize.second; ++targetCol) {
+        if (getJewelColour(targetRow, targetCol) == Colour::Unknown) {
             Colour randomColor = m_colourManager.getRandomColour();
-            setJewelColour(row, col, randomColor);
+            setJewelColour(targetRow, targetCol, randomColor);
             wasFilled = true;
         }
     }
