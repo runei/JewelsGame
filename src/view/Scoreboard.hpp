@@ -12,14 +12,16 @@
 
 class Scoreboard {
 public:
+    // Constructor
     Scoreboard(SDL_Renderer** renderer, GameViewModel& gameViewModel, Grid& grid);
-	~Scoreboard();
 
+    // Destructor
+    ~Scoreboard();
 
-    void update();
+    // Render the scoreboard
     void render();
 
-
+    // Handle mouse click events within the scoreboard
     void handleMouseClick(const SDL_Event& event);
 
 private:
@@ -29,18 +31,18 @@ private:
 
     Button m_newGameButton;
 
+    // Render the background of the scoreboard
     void renderBackground();
 
+    // Render text at the specified position
     void write(const std::string& text, const double xpos, const double ypos);
-
     void writeScore(const double xpos, const double ypos);
 
-    // The offset is in relation to the JEWEL_SIZE
+    // Calculate position and size based on an offset
     int getXPos(const double offset) const;
     int getYPos(const double offset) const;
     int getWidth(const double offset) const;
     int getHeight(const double offset) const;
-
 };
 
 #endif // SCOREBOARD_HPP
