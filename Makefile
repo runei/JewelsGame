@@ -1,5 +1,7 @@
+# CXX = x86_64-w64-mingw32-g++
 CXX = g++
 CXXFLAGS = -std=c++17
+# LIBS = -L/usr/lib/x86_64-linux-gnu/ -L/usr/local/lib/x86_64-linux-gnu/ -lSDL2 -lSDL2_ttf -lSDL2_image -lpthread -ldl
 LIBS = -lSDL2 -lSDL2_ttf -lSDL2_image -lpthread -ldl
 
 SRC_DIR = src
