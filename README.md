@@ -25,7 +25,7 @@ Welcome to the Jewel Swap Game! This game is a fun and addictive puzzle game whe
 ## Controls
 
 - **Swap Jewels:** Click on a jewel and then click on an adjacent jewel to swap them. Or, click and drag a jewel towards an adjacent jewel to swap them.
-- **Restart:** If you want to start over, you can click the "New Game" button at the bottom of the screen.
+- **Restart:** If you want to start over, you can click the "New Game" button at the left side of the screen.
 - **Exit:** Click the "Exit" button to close the game.
 
 ## Dependencies
