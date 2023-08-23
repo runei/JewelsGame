@@ -30,6 +30,11 @@ bool Game::initialize(const char* title, const int width, const int height) {
         m_window = SDLUtils::createWindow(title, width, height);
         m_renderer = SDLUtils::createRenderer(m_window);
 
+
+        m_icon = IMG_Load("assets/images/Black.png");
+        SDL_SetWindowIcon(m_window, m_icon);
+
+
         // Initialize frame time and game state
         m_prevFrameTime = SDL_GetTicks();
         m_isRunning = true;
@@ -217,6 +222,7 @@ void Game::cleanup() {
 
     SDLUtils::destroy(m_renderer);
     SDLUtils::destroy(m_window);
+    SDLUtils::destroy(m_icon);
 
     SDL_Quit();
 

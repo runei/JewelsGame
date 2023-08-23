@@ -119,3 +119,9 @@ void SDLUtils::destroy(SDL_Window* window) {
         SDL_DestroyWindow(window);
     }
 }
+
+void SDLUtils::destroy(SDL_Surface* surface) {
+    if (surface) {
+        SDL_FreeSurface(surface);
+    }
+}
